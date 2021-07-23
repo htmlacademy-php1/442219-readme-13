@@ -210,8 +210,7 @@ $posts = [
             </div>
         </div>
         <div class="popular__posts">
-
-            <?php foreach($posts as $key => $value): ?>
+            <?php foreach($posts as $value): ?>
             <article class="popular__post post <?=$value['type']; ?>">
                 <header class="post__header">
                     <h2><?=$value['title']; ?></h2>
