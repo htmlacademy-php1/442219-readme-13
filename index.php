@@ -5,11 +5,31 @@ $user_name = 'Игорь Влащенко';
 
 $posts = [
     ['title' => 'Цитата', 'type' => 'post-quote', 'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих', 'name' => 'Лариса', 'avatar' => 'userpic-larisa-small.jpg'],
-    ['title' => 'Игра престолов', 'type' => 'post-text', 'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!', 'name' => 'Владик', 'avatar' => 'userpic.jpg'],
+    ['title' => 'Игра престолов', 'type' => 'post-text', 'content' => 'Не могу дождаться, начала финального сезона своего любимого сериала!', 'name' => 'Владик', 'avatar' => 'userpic.jpg'],
     ['title' => 'Наконец, обработал фотки!', 'type' => 'post-photo', 'content' => 'rock-medium.jpg', 'name' => 'Виктор', 'avatar' => 'userpic-mark.jpg'],
     ['title' => 'Моя мечта', 'type' => 'post-photo', 'content' => 'coast-medium.jpg', 'name' => 'Лариса', 'avatar' => 'userpic-larisa-small.jpg'],
-    ['title' => 'Лучшие курсы', 'type' => 'post-link', 'content' => 'www.htmlacademy.ru', 'name' => 'Владик', 'avatar' => 'userpic.jpg'] 
+    ['title' => 'Лучшие курсы', 'type' => 'post-link', 'content' => 'www.htmlacademy.ru', 'name' => 'Владик', 'avatar' => 'userpic.jpg']
 ];
+
+function cut_text($text, $length = 300) {
+    if (mb_strlen($text, 'UTF-8') > $length) {
+        $link = ' <a class="post-text__more-link" href="#">Читать далее</a>';
+        $words = explode(" ", $text);
+        $output_words = [];
+
+        foreach ($words as $value) {
+            $output_words[] = $value;
+
+            if (mb_strlen(implode(" ", $output_words), 'UTF-8') > $length) {
+                break;
+            }
+        };
+        $text = implode(" ", $output_words);
+        $text = $text . '...' . $link;
+    };
+
+    return $text;
+}
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -225,12 +245,12 @@ $posts = [
                         </blockquote>
                     <?php elseif ($value['type'] == 'post-text'): ?>
                         <p>
-                            <?=$value['content'];?>
+                            <?=cut_text($value['content']); ?>
                         </p>
                     <?php elseif ($value['type'] == 'post-photo'): ?>
                         <div class="post-photo__image-wrapper">
                             <img src="img/<?=$value['content'];?>" alt="Фото от пользователя" width="360" height="240">
-                        </div>    
+                        </div>
                     <?php elseif ($value['type'] == 'post-video'): ?>
                         <div class="post-video__block">
                             <div class="post-video__preview">
@@ -257,7 +277,7 @@ $posts = [
                                 </div>
                                 <span><?=$value['content']; ?></span>
                             </a>
-                        </div>                                     
+                        </div>
                     <?php endif; ?>
                 </div>
                 <footer class="post__footer">
