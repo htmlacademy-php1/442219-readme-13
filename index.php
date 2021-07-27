@@ -1,69 +1,68 @@
 <?php
-$is_auth = rand(0, 1);
+    $is_auth = rand(0, 1);
 
-$user_name = 'Игорь Влащенко';
+    $user_name = 'Игорь Влащенко';
 
-$posts = [
-    [
-        'title' => 'Цитата',
-        'type' => 'post-quote',
-        'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
-        'name' => 'Лариса', 'avatar' => 'userpic-larisa-small.jpg',
-    ],
-    [
-        'title' => 'Игра престолов',
-        'type' => 'post-text',
-        'content' => 'Не могу дождаться, начала финального сезона своего любимого сериала!',
-        'name' => 'Владик',
-        'avatar' => 'userpic.jpg',
-    ],
-    [
-        'title' => 'Наконец, обработал фотки!',
-        'type' => 'post-photo',
-        'content' => 'rock-medium.jpg',
-        'name' => 'Виктор',
-        'avatar' => 'userpic-mark.jpg',
-    ],
-    [
-        'title' => 'Моя мечта',
-        'type' => 'post-photo',
-        'content' => 'coast-medium.jpg',
-        'name' => 'Лариса',
-        'avatar' => 'userpic-larisa-small.jpg',
-    ],
-    [
-        'title' => 'Лучшие курсы',
-        'type' => 'post-link',
-        'content' => 'www.htmlacademy.ru',
-        'name' => 'Владик',
-        'avatar' => 'userpic.jpg',
-    ],
-];
+    $posts = [
+        [
+            'title' => 'Цитата',
+            'type' => 'post-quote',
+            'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
+            'name' => 'Лариса', 'avatar' => 'userpic-larisa-small.jpg',
+        ],
+        [
+            'title' => 'Игра престолов',
+            'type' => 'post-text',
+            'content' => 'Не могу дождаться, начала финального сезона своего любимого сериала!',
+            'name' => 'Владик',
+            'avatar' => 'userpic.jpg',
+        ],
+        [
+            'title' => 'Наконец, обработал фотки!',
+            'type' => 'post-photo',
+            'content' => 'rock-medium.jpg',
+            'name' => 'Виктор',
+            'avatar' => 'userpic-mark.jpg',
+        ],
+        [
+            'title' => 'Моя мечта',
+            'type' => 'post-photo',
+            'content' => 'coast-medium.jpg',
+            'name' => 'Лариса',
+            'avatar' => 'userpic-larisa-small.jpg',
+        ],
+        [
+            'title' => 'Лучшие курсы',
+            'type' => 'post-link',
+            'content' => 'www.htmlacademy.ru',
+            'name' => 'Владик',
+            'avatar' => 'userpic.jpg',
+        ],
+    ];
 
-function cut_text($text, $length = 300) {
-    $is_long = false;
-
-    if (mb_strlen($text, 'UTF-8') <= $length) {
-        return array($text, $is_long);
-    } else {
+    function cut_text($text, $length = 300) {
         $is_long = true;
+
+        if (mb_strlen($text, 'UTF-8') <= $length) {
+            $is_long = false;
+            return array($text, $is_long);
+        }
+
         $words = explode(' ', $text);
-        $output_words = [];
-        $sum_word = '';
+        $output_string = '';
 
         foreach ($words as $word) {
-            $output_words[] = $word;
-            $sum_word .= $word;
+            $output_string .= $word;
 
-            if (mb_strlen($sum_word, 'UTF-8') > $length) {
+            if (mb_strlen($output_string, 'UTF-8') > $length) {
                 break;
+            } else {
+                $output_string .= ' ';
             }
         };
 
-        $text = implode(' ', $output_words);
-        return array($text, $is_long);
-    };
-}
+        return array($output_string, $is_long);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -278,11 +277,16 @@ function cut_text($text, $length = 300) {
                             <cite>Неизвестный Автор</cite>
                         </blockquote>
                     <?php elseif ($value['type'] == 'post-text'): ?>
-                        <?php if (cut_text($value['content'])[1]): ?>
-                            <?='<p>' . cut_text($value['content'])[0] . '...' . '</p>'; ?>
+                        <?php $arr_content = cut_text($value['content']) ?>
+                        <?php if ($arr_content[1]): ?>
+                            <p>
+                                <?=$arr_content[0] . '...'; ?>
+                            </p>
                             <a class="post-text__more-link" href="#">Читать далее</a>
                             <?php else: ?>
-                            <?='<p>' . cut_text($value['content'])[0] . '</p>'; ?>
+                            <p>
+                                <?=$value['content']; ?>
+                            </p>
                         <?php endif; ?>
                     <?php elseif ($value['type'] == 'post-photo'): ?>
                         <div class="post-photo__image-wrapper">
