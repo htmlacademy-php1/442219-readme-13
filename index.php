@@ -1,15 +1,66 @@
 <?php
-$is_auth = rand(0, 1);
+    $is_auth = rand(0, 1);
 
-$user_name = 'Игорь Влащенко';
+    $user_name = 'Игорь Влащенко';
 
-$posts = [
-    ['title' => 'Цитата', 'type' => 'post-quote', 'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих', 'name' => 'Лариса', 'avatar' => 'userpic-larisa-small.jpg'],
-    ['title' => 'Игра престолов', 'type' => 'post-text', 'content' => 'Не могу дождаться начала финального сезона своего любимого сериала!', 'name' => 'Владик', 'avatar' => 'userpic.jpg'],
-    ['title' => 'Наконец, обработал фотки!', 'type' => 'post-photo', 'content' => 'rock-medium.jpg', 'name' => 'Виктор', 'avatar' => 'userpic-mark.jpg'],
-    ['title' => 'Моя мечта', 'type' => 'post-photo', 'content' => 'coast-medium.jpg', 'name' => 'Лариса', 'avatar' => 'userpic-larisa-small.jpg'],
-    ['title' => 'Лучшие курсы', 'type' => 'post-link', 'content' => 'www.htmlacademy.ru', 'name' => 'Владик', 'avatar' => 'userpic.jpg'] 
-];
+    $posts = [
+        [
+            'title' => 'Цитата',
+            'type' => 'post-quote',
+            'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
+            'name' => 'Лариса', 'avatar' => 'userpic-larisa-small.jpg',
+        ],
+        [
+            'title' => 'Игра престолов',
+            'type' => 'post-text',
+            'content' => 'Не могу дождаться, начала финального сезона своего любимого сериала!',
+            'name' => 'Владик',
+            'avatar' => 'userpic.jpg',
+        ],
+        [
+            'title' => 'Наконец, обработал фотки!',
+            'type' => 'post-photo',
+            'content' => 'rock-medium.jpg',
+            'name' => 'Виктор',
+            'avatar' => 'userpic-mark.jpg',
+        ],
+        [
+            'title' => 'Моя мечта',
+            'type' => 'post-photo',
+            'content' => 'coast-medium.jpg',
+            'name' => 'Лариса',
+            'avatar' => 'userpic-larisa-small.jpg',
+        ],
+        [
+            'title' => 'Лучшие курсы',
+            'type' => 'post-link',
+            'content' => 'www.htmlacademy.ru',
+            'name' => 'Владик',
+            'avatar' => 'userpic.jpg',
+        ],
+    ];
+
+    function cut_text($text, $length = 300) {
+
+        if (mb_strlen($text, 'UTF-8') <= $length) {
+            return array($text, false);
+        }
+
+        $words = explode(' ', $text);
+        $output_string = '';
+
+        foreach ($words as $word) {
+            $output_string .= $word;
+
+            if (mb_strlen($output_string, 'UTF-8') > $length) {
+                break;
+            } else {
+                $output_string .= ' ';
+            }
+        };
+
+        return array($output_string, true);
+    }
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -224,13 +275,21 @@ $posts = [
                             <cite>Неизвестный Автор</cite>
                         </blockquote>
                     <?php elseif ($value['type'] == 'post-text'): ?>
-                        <p>
-                            <?=$value['content'];?>
-                        </p>
+                        <?php $arr_content = cut_text($value['content']) ?>
+                        <?php if ($arr_content[1]): ?>
+                            <p>
+                                <?=$arr_content[0] . '...'; ?>
+                            </p>
+                            <a class="post-text__more-link" href="#">Читать далее</a>
+                            <?php else: ?>
+                            <p>
+                                <?=$value['content']; ?>
+                            </p>
+                        <?php endif; ?>
                     <?php elseif ($value['type'] == 'post-photo'): ?>
                         <div class="post-photo__image-wrapper">
                             <img src="img/<?=$value['content'];?>" alt="Фото от пользователя" width="360" height="240">
-                        </div>    
+                        </div>
                     <?php elseif ($value['type'] == 'post-video'): ?>
                         <div class="post-video__block">
                             <div class="post-video__preview">
@@ -257,7 +316,7 @@ $posts = [
                                 </div>
                                 <span><?=$value['content']; ?></span>
                             </a>
-                        </div>                                     
+                        </div>
                     <?php endif; ?>
                 </div>
                 <footer class="post__footer">
