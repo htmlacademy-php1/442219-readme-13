@@ -41,11 +41,9 @@
     ];
 
     function cut_text($text, $length = 300) {
-        $is_long = true;
 
         if (mb_strlen($text, 'UTF-8') <= $length) {
-            $is_long = false;
-            return array($text, $is_long);
+            return array($text, false);
         }
 
         $words = explode(' ', $text);
@@ -61,7 +59,7 @@
             }
         };
 
-        return array($output_string, $is_long);
+        return array($output_string, true);
     }
 ?>
 <!DOCTYPE html>
