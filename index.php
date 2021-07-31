@@ -100,4 +100,3 @@
     print($layout_content);
 
     // TODO Обернуть htmlspecialchars в функцию
-?>
