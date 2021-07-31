@@ -2,50 +2,61 @@
     require_once('helpers.php');
     require_once('data.php');
 
+    date_default_timezone_set("Europe/Moscow");
+    define('MINUTE', 60);
+    define('HOUR', 60);
+    define('DAY', 24 * HOUR);
+    define('WEEK', 7 * DAY);
+    define('MONTH', 5 * WEEK);
+
     /**
-     * Вычисляет дату публикации поста
+     * Вычисляет дату публикации поста для каждого элемента массива с постами
      * @param int $index_post Индекс элемента массива с постами
      */
     function get_date_public_posts($index_post) {
-        date_default_timezone_set("Europe/Moscow");
+
         $date_datetime = generate_random_date($index_post);
         $date_timestamp = strtotime($date_datetime);
         $date_title = date('d.m.Y H:i', $date_timestamp);
-        $diff_date_timestamp = time() - $date_timestamp;
-        $diff_time_public = '';
-        $remaining_time = ceil($diff_date_timestamp / 60);
-
-
-        if ($remaining_time < 60) {
-            // если до текущего времени прошло меньше 60 минут
-            $diff_time_public = "$remaining_time " . get_noun_plural_form($remaining_time, 'минута', 'минуты', 'минут') . ' назад';
-
-        } else if ($remaining_time >= 60 && $remaining_time < 1440) {
-            // если до текущего времени прошло больше 60 минут, но меньше 24 часов
-            $remaining_time = ceil($remaining_time / 60);
-            $diff_time_public = "$remaining_time " . get_noun_plural_form($remaining_time, 'час', 'часа', 'часов') . ' назад';
-
-        } else if ($remaining_time >= 1440 && $remaining_time < 10080) {
-            // если до текущего времени прошло больше 24 часов, но меньше 7 дней
-            $remaining_time = ceil($remaining_time / 1440);
-            $diff_time_public = "$remaining_time " . get_noun_plural_form($remaining_time, 'день', 'дня', 'дней') . ' назад';
-
-        } else if ($remaining_time >= 10080 && $remaining_time < 50400) {
-            // если до текущего времени прошло больше 7 дней, но меньше 5 недель
-            $remaining_time = ceil($remaining_time / 10080);
-            $diff_time_public = "$remaining_time " . get_noun_plural_form($remaining_time, 'неделя', 'недели', 'недель') . ' назад';
-
-        } else if ($remaining_time >= 50400) {
-            // если до текущего времени прошло больше 5 недель
-            $remaining_time = ceil($remaining_time / 50400);
-            $diff_time_public = "$remaining_time " . get_noun_plural_form($remaining_time, 'месяц', 'месяца', 'месяцев') . ' назад';
-        };
 
         return array(
             'datetime' => $date_datetime,
             'datetitle' => $date_title,
-            'difftime' => $diff_time_public
+            'difftime' => get_diff_time_public_post($date_datetime)
         );
+    }
+
+    /**
+     * Вычисляет время прошедшее после публикации поста
+     * @param string $date_public Дата публикации поста
+     */
+    function get_diff_time_public_post($date_public) {
+        $diff_date_timestamp = time() - strtotime($date_public);
+        $diff_time_public_post = '';
+        $remaining_time = ceil($diff_date_timestamp / MINUTE);
+
+        switch (true) {
+            case ($remaining_time < HOUR):
+                $diff_time_public_post = "$remaining_time " . get_noun_plural_form($remaining_time, 'минута', 'минуты', 'минут') . ' назад';
+                break;
+            case ($remaining_time >= HOUR && $remaining_time < DAY):
+                $remaining_time = ceil($remaining_time / HOUR);
+                $diff_time_public_post = "$remaining_time " . get_noun_plural_form($remaining_time, 'час', 'часа', 'часов') . ' назад';
+                break;
+            case ($remaining_time >= DAY && $remaining_time < WEEK):
+                $remaining_time = ceil($remaining_time / DAY);
+                $diff_time_public_post = "$remaining_time " . get_noun_plural_form($remaining_time, 'день', 'дня', 'дней') . ' назад';
+                break;
+            case ($remaining_time >= WEEK && $remaining_time < MONTH):
+                $remaining_time = ceil($remaining_time / WEEK);
+                $diff_time_public_post = "$remaining_time " . get_noun_plural_form($remaining_time, 'неделя', 'недели', 'недель') . ' назад';
+                break;
+            default:
+                $remaining_time = ceil($remaining_time / MONTH);
+                $diff_time_public_post = "$remaining_time " . get_noun_plural_form($remaining_time, 'месяц', 'месяца', 'месяцев') . ' назад';
+        }
+
+        return $diff_time_public_post;
     }
 
     /**
@@ -87,4 +98,6 @@
     ]);
 
     print($layout_content);
+
+    // TODO Обернуть htmlspecialchars в функцию
 ?>
