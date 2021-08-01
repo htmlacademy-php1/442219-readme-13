@@ -3,12 +3,6 @@
     require_once('data.php');
 
     date_default_timezone_set("Europe/Moscow");
-    define('MINUTE', 60);
-    define('HOUR', 60);
-    define('DAY', 24 * HOUR);
-    define('WEEK', 7 * DAY);
-    define('MONTH', 5 * WEEK);
-    define('DATE_TITLE', 'd.m.Y H:i');
 
     /**
      * Вычисляет дату публикации поста для каждого элемента массива с постами
