@@ -20,9 +20,8 @@
      * @param string $format Требуемый формат записи даты
      */
     function format_date($date, $format) {
-        $formating_date = date($format, strtotime($date));
 
-        return $formating_date;
+        return date($format, strtotime($date));
     }
 
     /**
@@ -93,7 +92,7 @@
         'is_auth' => $is_auth,
         'user_name' => $user_name,
         'content' => $page_content,
-        'title' => 'readme: популярное'
+        'title' => 'readme: популярное',
     ]);
 
     print($layout_content);
