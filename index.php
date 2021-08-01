@@ -8,22 +8,27 @@
     define('DAY', 24 * HOUR);
     define('WEEK', 7 * DAY);
     define('MONTH', 5 * WEEK);
+    define('DATE_TITLE', 'd.m.Y H:i');
 
     /**
      * Вычисляет дату публикации поста для каждого элемента массива с постами
      * @param int $index_post Индекс элемента массива с постами
      */
     function get_date_public_posts($index_post) {
+        $date = generate_random_date($index_post);
 
-        $date_datetime = generate_random_date($index_post);
-        $date_timestamp = strtotime($date_datetime);
-        $date_title = date('d.m.Y H:i', $date_timestamp);
+        return $date;
+    }
 
-        return array(
-            'datetime' => $date_datetime,
-            'datetitle' => $date_title,
-            'difftime' => get_diff_time_public_post($date_datetime)
-        );
+    /**
+     * Преобразует дату по формату
+     * @param string $date Исходная дата
+     * @param string $format Требуемый формат записи даты
+     */
+    function format_date($date, $format) {
+        $formating_date = date($format, strtotime($date));
+
+        return $formating_date;
     }
 
     /**
