@@ -5,16 +5,6 @@
     date_default_timezone_set("Europe/Moscow");
 
     /**
-     * Вычисляет дату публикации поста для каждого элемента массива с постами
-     * @param int $index_post Индекс элемента массива с постами
-     */
-    function get_date_public_posts($index_post) {
-        $date = generate_random_date($index_post);
-
-        return $date;
-    }
-
-    /**
      * Преобразует дату по формату
      * @param string $date Исходная дата
      * @param string $format Требуемый формат записи даты
