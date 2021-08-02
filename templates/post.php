@@ -63,7 +63,8 @@
                 </div>
                 <div class="post__info">
                     <b class="post__author-name"><?= htmlspecialchars($value['name']); ?></b>
-                    <time class="post__time" datetime="">дата</time>
+                    <?php $public_date = generate_random_date($key); ?>
+                    <time class="post__time" datetime="<?= $public_date ?>" title="<?= format_date($public_date, DATE_TITLE); ?>"><?= get_diff_time_public_post($public_date); ?></time>
                 </div>
             </a>
         </div>
