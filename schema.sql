@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS subscriptions (
 
 CREATE TABLE IF NOT EXISTS messages (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  date_great DATETIME,
+  created_at DATETIME,
   content TEXT,
   sender_id INT UNSIGNED,
   recipient_id INT UNSIGNED,
