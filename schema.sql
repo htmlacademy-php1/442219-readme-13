@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS posts (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
   created_at DATETIME,
   title VARCHAR(255),
-  content TEXT,
+  text_content TEXT,
   author_quote VARCHAR(128),
   img_url VARCHAR(2048),
   video_url VARCHAR(2048),
