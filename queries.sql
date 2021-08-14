@@ -55,24 +55,24 @@ VALUES
   (1, 7);
 
 -- получить список постов с сортировкой по популярности и вместе с именами авторов и типом контента:
-SELECT COUNT(p.id) like_count, p.title, user_name AS author, t.title AS type_content
-  FROM posts p
-  JOIN  users u ON p.user_id = u.id
-  JOIN types t ON p.type_id = t.id
-  JOIN likes l ON p.id = l.post_id
-  GROUP BY p.id ORDER BY COUNT(p.id) DESC;
+SELECT COUNT(likes.id) like_count, posts.title, user_name AS author, types.title AS type_content
+  FROM posts
+  JOIN  users ON posts.user_id = users.id
+  JOIN types ON posts.type_id = types.id
+  JOIN likes ON posts.id = likes.post_id
+  GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;
 
 -- получить список постов для конкретного пользователя:
-SELECT user_name, p.title post_title
-  FROM posts p
-  JOIN users u ON u.id = p.user_id
-  WHERE user_name = 'Анна';
+SELECT title post_title
+  FROM posts
+  JOIN users ON users.id = posts.user_id
+  WHERE user_name = 'Лариса';
 
 -- получить список комментариев для одного поста, в комментариях должен быть логин пользователя:
-SELECT p.title post, com.content comment, u.user_name FROM comments com
-  JOIN posts p ON p.id = com.post_id
-  JOIN users u ON com.author_id = u.id
-  WHERE com.post_id = 3;
+SELECT comments.content comment, users.user_name
+  FROM comments
+  JOIN users ON comments.author_id = users.id
+  WHERE comments.post_id = 3;
 
 -- добавить лайк к посту:
 INSERT INTO likes SET user_id = 2, post_id = 5;
