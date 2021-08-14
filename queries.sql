@@ -63,10 +63,9 @@ SELECT COUNT(likes.id) like_count, posts.title, user_name AS author, types.title
   GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;
 
 -- получить список постов для конкретного пользователя:
-SELECT title post_title
+SELECT title
   FROM posts
-  JOIN users ON users.id = posts.user_id
-  WHERE user_name = 'Лариса';
+  WHERE posts.user_id = 5;
 
 -- получить список комментариев для одного поста, в комментариях должен быть логин пользователя:
 SELECT comments.content comment, users.user_name
