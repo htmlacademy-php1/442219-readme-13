@@ -13,7 +13,8 @@
             'title' => 'Цитата',
             'type' => 'post-quote',
             'content' => 'Мы в жизни любим только раз, а после ищем лишь похожих',
-            'name' => 'Лариса', 'avatar' => 'userpic-larisa-small.jpg',
+            'name' => 'Лариса',
+            'avatar' => 'userpic-larisa-small.jpg',
         ],
         [
             'title' => 'Игра престолов',
