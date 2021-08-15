@@ -1,8 +1,40 @@
 <?php
     require_once('helpers.php');
     require_once('data.php');
+    require_once('init.php');
 
     date_default_timezone_set("Europe/Moscow");
+
+    // 1. В сценарии главной страницы выполните подключение к MySQL.
+    $link = mysqli_connect($db_host['host'], $db_host['user'], $db_host['password'], $db_host['database']);
+    mysqli_set_charset($link, "utf8");
+
+    // 2. Отправьте SQL-запрос для получения типов контента.
+    $sql_types = 'SELECT title, class FROM types;';
+
+    // 3. Отправьте SQL-запрос для получения списка постов, объединённых с пользователями и отсортированный по популярности.
+    $sql_posts = 'SELECT COUNT(likes.id) likes, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;';
+
+    // 4. Используйте эти данные для показа списка постов и списка типов контента на главной странице.
+    if (!$link) {
+        $error = mysqli_connect_error();
+        $page_content = include_template('error.php', ['error' => $error]);
+    } else {
+        $result_posts = mysqli_query($link, $sql_posts);
+        $result_types = mysqli_query($link, $sql_types);
+        if ($result_posts && $result_types) {
+            $posts = mysqli_fetch_all($result_posts, MYSQLI_ASSOC);
+            $types = mysqli_fetch_all($result_types, MYSQLI_ASSOC);
+
+            $page_content = include_template('main.php', [
+                'posts' => $posts,
+                'types' => $types,
+            ]);
+        } else {
+            $error = mesqli_error($link);
+            $page_content = include_template('error.php', ['error' => $error]);
+        };
+    };
 
     /**
      * Преобразует дату по формату
@@ -12,7 +44,7 @@
     function format_date($date, $format) {
 
         return date($format, strtotime($date));
-    }
+    };
 
     /**
      * Вычисляет время прошедшее после публикации поста
@@ -73,10 +105,6 @@
 
         return array($output_string, true);
     }
-
-    $page_content = include_template('main.php', [
-        'posts' => $posts,
-    ]);
 
     $layout_content = include_template('layout.php', [
         'is_auth' => $is_auth,

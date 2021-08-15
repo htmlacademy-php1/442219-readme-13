@@ -1,5 +1,3 @@
--- DELETE FROM types;
-
 INSERT INTO types (title, class)
 VALUES
   ('Текст', 'text'),
