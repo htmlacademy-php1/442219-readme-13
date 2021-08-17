@@ -21,7 +21,7 @@ VALUES
   (NOW(), 'Наконец, обработал фотки!', NULL, NULL, 'rock-medium.jpg', NULL, NULL, 18, 3, 3),
   (NOW(), 'Моя мечта', NULL, NULL, 'coast-medium.jpg', NULL, NULL, 34, 1, 3),
   (NOW(), 'Лучшие курсы', NULL, NULL, NULL, NULL, 'www.htmlacademy.ru', 55, 2, 5),
-  (NOW(), 'Лучший подкаст', NULL, NULL, NULL, 'https://www.youtube.com/channel/UCY35dlJe-V5J_IqzU-XksAg', NULL, 8, 4, 4),
+  (NOW(), 'Лучший подкаст', NULL, NULL, NULL, 'https://www.youtube.com/watch?v=NuOTVGT6gVk&list=PLMBnwIwFEFHcwuevhsNXkFTcadeX5R1Go', NULL, 8, 4, 4),
   (NOW(), 'Доклад интрига', NULL, NULL, NULL, 'https://www.youtube.com/watch?v=nIFClfBXuIQ&list=RDCMUCTUyoZMfksbNIHfWJjwr5aQ&index=2', NULL, 12, 5, 4);
 
 INSERT INTO comments (created_at, content, author_id, post_id)
