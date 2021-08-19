@@ -8,3 +8,10 @@
 
     $is_auth = rand(0, 1);
     $user_name = 'Игорь Влащенко';
+
+    $array_layout_data = [
+        'is_auth' => $is_auth,
+        'user_name' => $user_name,
+        'content' => '',
+        'title' => 'readme: популярное',
+    ];

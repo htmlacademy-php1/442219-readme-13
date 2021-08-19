@@ -8,8 +8,8 @@
     $link = mysqli_connect($db_host['host'], $db_host['user'], $db_host['password'], $db_host['database']);
 
     if (!$link) {
-        $error = mysqli_connect_error();
-        $page_content = include_template('error.php', ['error' => $error]);
+        get_error_template($link);
+        show_error($array_layout_data);
     } else {
         mysqli_set_charset($link, "utf8");
         // SQL-запрос для получения типов контента
@@ -18,27 +18,18 @@
         // SQL-запрос для получения списка постов, объединённых с пользователями и отсортированный по популярности
         $sql_posts = 'SELECT COUNT(likes.id) likes, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;';
 
-        $array_layout_data = [
-            'is_auth' => $is_auth,
-            'user_name' => $user_name,
-            'content' => '',
-            'title' => 'readme: популярное',
-        ];
-
         $types = get_arr_from_mysql($link, $sql_types);
 
         if (!$types) {
             $array_layout_data['content'] = get_error_template($link);
-            show_layout($array_layout_data);
-            exit;
+            show_error($array_layout_data);
         };
 
         $posts = get_arr_from_mysql($link, $sql_posts);
 
         if (!$posts) {
             $array_layout_data['content'] = get_error_template($link);
-            show_layout($array_layout_data);
-            exit;
+            show_error($array_layout_data);
         };
 
     };
@@ -59,6 +50,14 @@
     }
 
     /**
+     * Отображает страницу ошибки и завершает скрипт
+     */
+    function show_error($array_error_data) {
+        show_layout($array_error_data);
+        exit;
+    }
+
+    /**
      * Получает массив по SQL запросу
      */
     function get_arr_from_mysql($connect_mysql, $sql_query) {
@@ -75,7 +74,11 @@
      * Получает шаблон при ошибке SQL запроса
      */
     function get_error_template($connect_mysql, $template_error_name = 'error.php') {
-        $error = mysqli_error($connect_mysql);
+        $error = mysqli_connect_error();
+        if (!$error) {
+            $error = mysqli_error($connect_mysql);
+        };
+
         return include_template($template_error_name, ['error' => $error]);
     }
 
@@ -149,4 +152,4 @@
         return array($output_string, true);
     }
 
-    // TODO Обернуть htmlspecialchars в функцию
+    // TODO Обернуть htmlspecialchars в функцию?
