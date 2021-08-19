@@ -18,25 +18,45 @@
         // SQL-запрос для получения списка постов, объединённых с пользователями и отсортированный по популярности
         $sql_posts = 'SELECT COUNT(likes.id) likes, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;';
 
+        $array_layout_data = [
+            'is_auth' => $is_auth,
+            'user_name' => $user_name,
+            'content' => '',
+            'title' => 'readme: популярное',
+        ];
+
         $types = get_arr_from_mysql($link, $sql_types);
 
-        if ($types) {
-            $posts = get_arr_from_mysql($link, $sql_posts);
+        if (!$types) {
+            $array_layout_data['content'] = get_error_template($link);
+            show_layout($array_layout_data);
+            exit;
+        };
 
-            if ($posts) {
-                $page_content = include_template('main.php', [
-                    'posts' => $posts,
-                    'types' => $types,
-                ]);
-            } else {
-                $page_content = get_error_template($link);
-            };
+        $posts = get_arr_from_mysql($link, $sql_posts);
 
-        } else {
-            $page_content = get_error_template($link);
+        if (!$posts) {
+            $array_layout_data['content'] = get_error_template($link);
+            show_layout($array_layout_data);
+            exit;
         };
 
     };
+
+    $array_layout_data['content'] = include_template('main.php', [
+        'posts' => $posts,
+        'types' => $types,
+    ]);
+
+    show_layout($array_layout_data);
+
+    /**
+     * Отображает шаблон
+     */
+    function show_layout($array_data) {
+
+        print(include_template('layout.php', $array_data));
+    }
 
     /**
      * Получает массив по SQL запросу
@@ -54,9 +74,9 @@
     /**
      * Получает шаблон при ошибке SQL запроса
      */
-    function get_error_template($connect_mysql, $template_error_path = 'error.php') {
+    function get_error_template($connect_mysql, $template_error_name = 'error.php') {
         $error = mysqli_error($connect_mysql);
-        return include_template($template_error_path, ['error' => $error]);
+        return include_template($template_error_name, ['error' => $error]);
     }
 
     /**
@@ -128,14 +148,5 @@
 
         return array($output_string, true);
     }
-
-    $layout_content = include_template('layout.php', [
-        'is_auth' => $is_auth,
-        'user_name' => $user_name,
-        'content' => $page_content,
-        'title' => 'readme: популярное',
-    ]);
-
-    print($layout_content);
 
     // TODO Обернуть htmlspecialchars в функцию
