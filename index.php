@@ -7,58 +7,67 @@
 
     $link = mysqli_connect($db_host['host'], $db_host['user'], $db_host['password'], $db_host['database']);
 
+    var_dump($link);
+
     if (!$link) {
-        get_error_template($link);
-        show_error($array_layout_data);
-    } else {
-        mysqli_set_charset($link, "utf8");
-        // SQL-запрос для получения типов контента
-        $sql_types = 'SELECT title, class FROM types;';
-
-        // SQL-запрос для получения списка постов, объединённых с пользователями и отсортированный по популярности
-        $sql_posts = 'SELECT COUNT(likes.id) likes, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;';
-
-        $types = get_arr_from_mysql($link, $sql_types);
-
-        if (!$types) {
-            $array_layout_data['content'] = get_error_template($link);
-            show_error($array_layout_data);
-        };
-
-        $posts = get_arr_from_mysql($link, $sql_posts);
-
-        if (!$posts) {
-            $array_layout_data['content'] = get_error_template($link);
-            show_error($array_layout_data);
-        };
-
+        $error = mysqli_connect_error();
+        show_error($error);
     };
 
-    $array_layout_data['content'] = include_template('main.php', [
+    mysqli_set_charset($link, "utf8");
+    // SQL-запрос для получения типов контента
+    $sql_types = 'SELECT title, class FROM types;';
+
+    // SQL-запрос для получения списка постов, объединённых с пользователями и отсортированный по популярности
+    $sql_posts = 'SELECT COUNT(likes.id) likes, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;';
+
+    $types = get_arr_from_mysql($link, $sql_types);
+
+    if (!$types) {
+        $error = mysqli_error($link);
+        show_error($error);
+    };
+
+    $posts = get_arr_from_mysql($link, $sql_posts);
+
+    if (!$posts) {
+        $error = mysqli_error($link);
+        show_error($error);
+    };
+
+    $layout_content = include_template('main.php', [
         'posts' => $posts,
         'types' => $types,
     ]);
 
-    show_layout($array_layout_data);
+    show_layout($layout_content);
 
     /**
      * Отображает шаблон
+     * @param string $content HTML секции main шаблона layout.php
      */
-    function show_layout($array_data) {
-
-        print(include_template('layout.php', $array_data));
+    function show_layout($content) {
+        print(include_template('layout.php', [
+            'is_auth' => rand(0, 1),
+            'user_name' => 'Игорь Влащенко',
+            'content' => $content,
+            'title' => 'readme: популярное',
+        ]));
     }
 
     /**
      * Отображает страницу ошибки и завершает скрипт
+     * @param string $error_content Описание ошибки
      */
-    function show_error($array_error_data) {
-        show_layout($array_error_data);
+    function show_error($error_content) {
+        show_layout(include_template('error.php', ['error' => $error_content]));
         exit;
     }
 
     /**
      * Получает массив по SQL запросу
+     * @param object $connect_mysql Текущее соединение с сервером MySQL
+     * @param string $sql_query SQL запрос
      */
     function get_arr_from_mysql($connect_mysql, $sql_query) {
         $result = mysqli_query($connect_mysql, $sql_query);
@@ -68,18 +77,6 @@
         }
 
         return $result;
-    }
-
-    /**
-     * Получает шаблон при ошибке SQL запроса
-     */
-    function get_error_template($connect_mysql, $template_error_name = 'error.php') {
-        $error = mysqli_connect_error();
-        if (!$error) {
-            $error = mysqli_error($connect_mysql);
-        };
-
-        return include_template($template_error_name, ['error' => $error]);
     }
 
     /**
