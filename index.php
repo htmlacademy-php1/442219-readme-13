@@ -1,8 +1,78 @@
 <?php
     require_once('helpers.php');
     require_once('data.php');
+    require_once('config.php');
 
     date_default_timezone_set("Europe/Moscow");
+
+    $link = mysqli_connect($db_host['host'], $db_host['user'], $db_host['password'], $db_host['database']);
+
+    if (!$link) {
+        show_error('Ошибка подключения к серверу MySQL: ' . mysqli_connect_error());
+    };
+
+    mysqli_set_charset($link, "utf8");
+    // SQL-запрос для получения типов контента
+    $sql_types = 'SELECT title, class FROM types;';
+
+    // SQL-запрос для получения списка постов, объединённых с пользователями и отсортированный по популярности
+    $sql_posts = 'SELECT COUNT(likes.id) likes, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;';
+
+    $types = get_arr_from_mysql($link, $sql_types);
+
+    if (!$types) {
+        show_error('Ошибка чтения БД: ' . mysqli_error($link));
+    };
+
+    $posts = get_arr_from_mysql($link, $sql_posts);
+
+    if (!$posts) {
+        show_error('Ошибка чтения БД: ' . mysqli_error($link));
+    };
+
+    $layout_content = include_template('main.php', [
+        'posts' => $posts,
+        'types' => $types,
+    ]);
+
+    show_layout($layout_content);
+
+    /**
+     * Отображает шаблон
+     * @param string $content HTML секции main шаблона layout.php
+     */
+    function show_layout($content) {
+        print(include_template('layout.php', [
+            'is_auth' => rand(0, 1),
+            'user_name' => 'Игорь Влащенко',
+            'content' => $content,
+            'title' => 'readme: популярное',
+        ]));
+    }
+
+    /**
+     * Отображает страницу ошибки и завершает скрипт
+     * @param string $error_content Описание ошибки
+     */
+    function show_error($error_content) {
+        show_layout(include_template('error.php', ['error' => $error_content]));
+        exit;
+    }
+
+    /**
+     * Получает массив по SQL запросу
+     * @param object $connect_mysql Текущее соединение с сервером MySQL
+     * @param string $sql_query SQL запрос
+     */
+    function get_arr_from_mysql($connect_mysql, $sql_query) {
+        $result = mysqli_query($connect_mysql, $sql_query);
+
+        if ($result) {
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        }
+
+        return $result;
+    }
 
     /**
      * Преобразует дату по формату
@@ -74,17 +144,4 @@
         return array($output_string, true);
     }
 
-    $page_content = include_template('main.php', [
-        'posts' => $posts,
-    ]);
-
-    $layout_content = include_template('layout.php', [
-        'is_auth' => $is_auth,
-        'user_name' => $user_name,
-        'content' => $page_content,
-        'title' => 'readme: популярное',
-    ]);
-
-    print($layout_content);
-
-    // TODO Обернуть htmlspecialchars в функцию
+    // TODO Обернуть htmlspecialchars в функцию?
