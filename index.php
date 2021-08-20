@@ -7,10 +7,8 @@
 
     $link = mysqli_connect($db_host['host'], $db_host['user'], $db_host['password'], $db_host['database']);
 
-    var_dump($link);
-
     if (!$link) {
-        $error = mysqli_connect_error();
+        $error = 'Ошибка подключения к серверу MySQLI: ' . mysqli_connect_error();
         show_error($error);
     };
 
@@ -24,14 +22,14 @@
     $types = get_arr_from_mysql($link, $sql_types);
 
     if (!$types) {
-        $error = mysqli_error($link);
+        $error = 'Ошибка чтения БД: ' . mysqli_error($link);
         show_error($error);
     };
 
     $posts = get_arr_from_mysql($link, $sql_posts);
 
     if (!$posts) {
-        $error = mysqli_error($link);
+        $error = 'Ошибка чтения БД: ' . mysqli_error($link);
         show_error($error);
     };
 
