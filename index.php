@@ -8,8 +8,7 @@
     $link = mysqli_connect($db_host['host'], $db_host['user'], $db_host['password'], $db_host['database']);
 
     if (!$link) {
-        $error = 'Ошибка подключения к серверу MySQL: ' . mysqli_connect_error();
-        show_error($error);
+        show_error('Ошибка подключения к серверу MySQL: ' . mysqli_connect_error());
     };
 
     mysqli_set_charset($link, "utf8");
@@ -22,15 +21,13 @@
     $types = get_arr_from_mysql($link, $sql_types);
 
     if (!$types) {
-        $error = 'Ошибка чтения БД: ' . mysqli_error($link);
-        show_error($error);
+        show_error('Ошибка чтения БД: ' . mysqli_error($link));
     };
 
     $posts = get_arr_from_mysql($link, $sql_posts);
 
     if (!$posts) {
-        $error = 'Ошибка чтения БД: ' . mysqli_error($link);
-        show_error($error);
+        show_error('Ошибка чтения БД: ' . mysqli_error($link));
     };
 
     $layout_content = include_template('main.php', [
