@@ -8,7 +8,7 @@
     $link = mysqli_connect($db_host['host'], $db_host['user'], $db_host['password'], $db_host['database']);
 
     if (!$link) {
-        $error = 'Ошибка подключения к серверу MySQLI: ' . mysqli_connect_error();
+        $error = 'Ошибка подключения к серверу MySQL: ' . mysqli_connect_error();
         show_error($error);
     };
 
