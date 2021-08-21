@@ -16,7 +16,7 @@
     $sql_types = 'SELECT id, title, class FROM types;';
 
     // Дефолтная сортировка постов
-    $sql_posts = 'SELECT COUNT(likes.id) likes, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC LIMIT 6;';
+    $sql_posts = 'SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC LIMIT 6;';
 
     $types = get_arr_from_mysql($link, $sql_types);
 
@@ -28,7 +28,7 @@
     $type_id = filter_input(INPUT_GET, 'id');
 
     if ($type_id) {
-        $sql_posts = 'SELECT COUNT(likes.id) likes, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id WHERE types.id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;';
+        $sql_posts = 'SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id WHERE types.id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;';
 
         $stmt = db_get_prepare_stmt($link, $sql_posts, [$type_id]);
         mysqli_stmt_execute($stmt);

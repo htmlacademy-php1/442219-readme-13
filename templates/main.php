@@ -56,7 +56,7 @@
         </div>
         <div class="popular__posts">
             <?php foreach($posts as $key => $value): ?>
-                <?= include_template('post.php', ['key' => $key, 'value' => $value]); ?>
+                <?= include_template('post-preview.php', ['key' => $key, 'value' => $value]); ?>
             <?php endforeach; ?>
         </div>
     </div>
