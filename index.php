@@ -28,7 +28,7 @@
     if ($type_id) {
         $sql_posts = 'SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id WHERE types.id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;';
 
-        $posts = db_execute_stmt($link, $sql_post, [$type_id], false);
+        $posts = db_execute_stmt($link, $sql_posts, [$type_id], false);
     } else {
         $posts = get_arr_from_mysql($link, $sql_posts);
     };
