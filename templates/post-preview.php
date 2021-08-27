@@ -7,7 +7,7 @@
 
             <div class="post-details__main-block post post--details">
                 <?php
-                    print(include_template('post-' . $post['class'] . '.php', [
+                    print(include_template('post-' . $post['alias'] . '.php', [
                         'post' => $post,
                     ]));
                 ?>

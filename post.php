@@ -1,43 +1,37 @@
 <?php
-    require_once('functions.php');
-    require_once('data.php');
-    require_once('config.php');
+require_once('functions.php');
+require_once('constants.php');
+require_once('config.php');
+require_once('connect.php');
+require_once('models.php');
 
-    $link = mysqli_connect($db_host['host'], $db_host['user'], $db_host['password'], $db_host['database']);
+$post_id = filter_input(INPUT_GET, 'id');
+if (!$post_id) {
+    show_error('Запрошенная страница не найдена на сервере: ' . '404');
+}
 
-    if (!$link) {
-        show_error('Ошибка подключения к серверу MySQL: ' . mysqli_connect_error());
-    };
+// Выбираем пост по ID в запросе
+$sql_post = get_posts_by_index();
 
-    mysqli_set_charset($link, "utf8");
+// Выбираем число подписчиков у автора поста
+$sql_subscribers = get_subscribers_by_user();
 
-    $post_id = filter_input(INPUT_GET, 'id');
-    if (!$post_id) {
-        show_error('Запрошенная страница не найдена на сервере: ' . '404');
-    }
+// Выбираем число публикаций у автора поста
+$sql_posting = get_posting_by_user();
 
-    // Выбираем пост по ID в запросе
-    $sql_post = 'SELECT COUNT(likes.id) likes, posts.id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.class, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id WHERE posts.id = ? GROUP BY posts.id;';
+$post = db_execute_stmt_assoc($link, $sql_post, [$post_id]);
+if (!$post) {
+    show_error('Запрошенная страница не найдена на сервере: ' . '404');
+}
 
-    // Выбираем число подписчиков у автора поста
-    $sql_subscribers = 'SELECT COUNT(author_id) count_sub FROM subscriptions WHERE author_id = ?;';
+$subscribers = db_execute_stmt_assoc($link, $sql_subscribers, [$post['id_user']]);
 
-    // Выбираем число публикаций у автора поста
-    $sql_posting = 'SELECT COUNT(posts.user_id) count_posts FROM posts WHERE posts.user_id = ?;';
+$posting = db_execute_stmt_assoc($link, $sql_posting, [$post['id_user']]);
 
-    $post = db_execute_stmt($link, $sql_post, [$post_id], true);
-    if (!$post) {
-        show_error('Запрошенная страница не найдена на сервере: ' . '404');
-    }
+$post_content = include_template('post-preview.php', [
+    'post' => $post,
+    'subscribers' => $subscribers,
+    'posting' => $posting,
+]);
 
-    $subscribers = db_execute_stmt($link, $sql_subscribers, [$post['id_user']], true);
-
-    $posting = db_execute_stmt($link, $sql_posting, [$post['id_user']], true);
-
-    $post_content = include_template('post-preview.php', [
-        'post' => $post,
-        'subscribers' => $subscribers,
-        'posting' => $posting,
-    ]);
-
-    show_layout($post_content);
+show_layout($post_content);

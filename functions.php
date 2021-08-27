@@ -132,18 +132,32 @@ function db_get_prepare_stmt($link, $sql, $data = [])
  * @param $link mysqli Ресурс соединения
  * @param $sql string SQL запрос с плейсхолдерами вместо значений
  * @param array $data Данные для вставки на место плейсхолдеров
- * @param boolean $is_assoc Ожидается ассоциативный массив
  *
- * @return array Массив из подготовленного запроса
+ * @return array Двухмерный массив из подготовленного запроса
  */
-function db_execute_stmt($link, $sql, $data = [], $is_assoc) {
-
+function db_execute_stmt_all($link, $sql, $data = [])
+{
     $stmt = db_get_prepare_stmt($link, $sql, $data);
     mysqli_stmt_execute($stmt);
     $result_stmt = mysqli_stmt_get_result($stmt);
-    if (!$is_assoc) {
-        return $result_arr = mysqli_fetch_all($result_stmt, MYSQLI_ASSOC);
-    }
+
+    return $result_arr = mysqli_fetch_all($result_stmt, MYSQLI_ASSOC);
+}
+
+/**
+ * Выполняет подготовленное выражение на основе готового SQL запроса и переданных данных
+ *
+ * @param $link mysqli Ресурс соединения
+ * @param $sql string SQL запрос с плейсхолдерами вместо значений
+ * @param array $data Данные для вставки на место плейсхолдеров
+ *
+ * @return array Ассоциативный Массив из подготовленного запроса
+ */
+function db_execute_stmt_assoc($link, $sql, $data = [])
+{
+    $stmt = db_get_prepare_stmt($link, $sql, $data);
+    mysqli_stmt_execute($stmt);
+    $result_stmt = mysqli_stmt_get_result($stmt);
 
     return $result_arr = mysqli_fetch_assoc($result_stmt);
 }
@@ -267,7 +281,8 @@ function generate_random_date($index)
  * Отображает шаблон
  * @param string $content HTML секции main шаблона layout.php
  */
-function show_layout($content) {
+function show_layout($content)
+{
     print(include_template('layout.php', [
         'is_auth' => rand(0, 1),
         'user_name' => 'Игорь Влащенко',
@@ -280,7 +295,8 @@ function show_layout($content) {
  * Отображает страницу ошибки и завершает скрипт
  * @param string $error_content Описание ошибки
  */
-function show_error($error_content) {
+function show_error($error_content)
+{
     show_layout(include_template('error.php', ['error' => $error_content]));
     exit;
 }
@@ -290,7 +306,8 @@ function show_error($error_content) {
  * @param object $connect_mysql Текущее соединение с сервером MySQL
  * @param string $sql_query SQL запрос
  */
-function get_arr_from_mysql($connect_mysql, $sql_query) {
+function get_arr_from_mysql($connect_mysql, $sql_query)
+{
     $result = mysqli_query($connect_mysql, $sql_query);
 
     if ($result) {
@@ -305,7 +322,8 @@ function get_arr_from_mysql($connect_mysql, $sql_query) {
  * @param string $date Исходная дата
  * @param string $format Требуемый формат записи даты
  */
-function format_date($date, $format) {
+function format_date($date, $format)
+{
 
     return date($format, strtotime($date));
 }
@@ -314,7 +332,8 @@ function format_date($date, $format) {
  * Вычисляет время прошедшее после публикации поста
  * @param string $date_public Дата публикации поста
  */
-function get_diff_time_public_post($date_public) {
+function get_diff_time_public_post($date_public)
+{
     $diff_date_timestamp = time() - strtotime($date_public);
     $diff_time_public_post = '';
     $remaining_time = ceil($diff_date_timestamp / MINUTE);
@@ -348,10 +367,11 @@ function get_diff_time_public_post($date_public) {
  * @param string $text Текст поста
  * @param int $length Максимальное число символов, отображаемых в тексте поста
  */
-function cut_text($text, $length = 300) {
+function cut_text($text, $length = 300)
+{
 
     if (mb_strlen($text, 'UTF-8') <= $length) {
-        return array($text, false);
+        return $text;
     }
 
     $words = explode(' ', $text);
@@ -367,7 +387,5 @@ function cut_text($text, $length = 300) {
         }
     };
 
-    return array($output_string, true);
+    return $output_string .= '...';
 }
-
-// TODO Обернуть htmlspecialchars в функцию?

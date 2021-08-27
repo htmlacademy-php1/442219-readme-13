@@ -37,16 +37,16 @@
                 <b class="popular__filters-caption filters__caption">Тип контента:</b>
                 <ul class="popular__filters-list filters__list">
                     <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                        <a class="filters__button filters__button--ellipse filters__button--all <?php if (!$type_id) print('filters__button--active'); ?>" href="index.php?id=0">
+                        <a class="filters__button filters__button--ellipse filters__button--all <?php if (!$type_id) : ?>filters__button--active<?php endif; ?>" href="index.php?id=0">
                             <span>Все</span>
                         </a>
                     </li>
-                    <?php foreach($types as $type): ?>
+                    <?php foreach ($types as $type): ?>
                         <li class="popular__filters-item filters__item">
-                            <a class="filters__button filters__button--photo button <?php if ($type_id == $type['id']) print('filters__button--active'); ?>" href="index.php?id=<?= $type['id']; ?>">
+                            <a class="filters__button filters__button--photo button <?php if ($type_id === $type['id']) : ?>filters__button--active<?php endif; ?>" href="index.php?id=<?= $type['id']; ?>">
                                 <span class="visually-hidden"><?= $type['title'] ?></span>
                                 <svg class="filters__icon" width="22" height="18">
-                                    <use xlink:href="#icon-filter-<?= $type['class'] ?>"></use>
+                                    <use xlink:href="#icon-filter-<?= $type['alias'] ?>"></use>
                                 </svg>
                             </a>
                         </li>
@@ -55,8 +55,8 @@
             </div>
         </div>
         <div class="popular__posts">
-            <?php foreach($posts as $key => $value): ?>
-                <?= include_template('post-popular.php', ['key' => $key, 'value' => $value]); ?>
+            <?php foreach ($posts as $index => $post): ?>
+                <?= include_template('post-popular.php', ['index' => $index, 'post' => $post]); ?>
             <?php endforeach; ?>
         </div>
     </div>
