@@ -15,7 +15,7 @@ function get_content_types()
  *
  * @return string SQL-запрос
  */
-function get_popular_posts_default($limit_posts = '6')
+function get_popular_posts_default($limit_posts = '9')
 {
     return "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC LIMIT $limit_posts;";
 }

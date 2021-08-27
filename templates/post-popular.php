@@ -11,25 +11,14 @@
                 <cite><?= $post['author_quote']; ?></cite>
             </blockquote>
         <?php elseif ($post['alias'] === 'text'): ?>
-            <!-- <?php $arr_content = cut_text(htmlspecialchars($post['text_content'])) ?>
-            <?php if ($arr_content[1]): ?>
-                <p>
-                    <?=$arr_content[0] . '...'; ?>
-                </p>
-                <a class="post-text__more-link" href="#">Читать далее</a>
-                <?php else: ?>
-                <p>
-                    <?= htmlspecialchars($post['text_content']); ?>
-                </p>
-            <?php endif; ?> -->
-
             <p>
                 <?= cut_text(htmlspecialchars($post['text_content'])); ?>
             </p>
-            <div class="post-text__more-link-wrapper">
-                <a class="post-text__more-link" href="#">Читать далее</a>
-            </div>
-
+            <?php if (is_text_big($post['text_content'], MAX_LENGTH_TEXT)) : ?>
+                <div class="post-text__more-link-wrapper">
+                    <a class="post-text__more-link" href="#">Читать далее</a>
+                </div>
+            <?php endif; ?>
         <?php elseif ($post['alias'] === 'photo'): ?>
             <div class="post-photo__image-wrapper">
                 <img src="img/<?= $post['img_url']; ?>" alt="Фото от пользователя" width="360" height="240">

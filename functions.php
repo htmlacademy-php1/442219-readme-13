@@ -114,8 +114,7 @@ function db_get_prepare_stmt($link, $sql, $data = [])
 
         $values = array_merge([$stmt, $types], $stmt_data);
 
-        $func = 'mysqli_stmt_bind_param';
-        $func(...$values);
+        mysqli_stmt_bind_param(...$values);
 
         if (mysqli_errno($link) > 0) {
             $errorMsg = 'Не удалось связать подготовленное выражение с параметрами: ' . mysqli_error($link);
@@ -367,10 +366,10 @@ function get_diff_time_public_post($date_public)
  * @param string $text Текст поста
  * @param int $length Максимальное число символов, отображаемых в тексте поста
  */
-function cut_text($text, $length = 300)
+function cut_text($text, $length = MAX_LENGTH_TEXT)
 {
 
-    if (mb_strlen($text, 'UTF-8') <= $length) {
+    if (!is_text_big($text, $length)) {
         return $text;
     }
 
@@ -380,7 +379,7 @@ function cut_text($text, $length = 300)
     foreach ($words as $word) {
         $output_string .= $word;
 
-        if (mb_strlen($output_string, 'UTF-8') > $length) {
+        if (is_text_big($output_string, $length)) {
             break;
         } else {
             $output_string .= ' ';
@@ -388,4 +387,18 @@ function cut_text($text, $length = 300)
     };
 
     return $output_string .= '...';
+}
+
+/**
+ * Определяет что длина текста поста больше максимума
+ * @param string $text Текст поста
+ * @param int $max_length_text Максимальное число символов, отображаемых в тексте поста
+ */
+function is_text_big($text, $max_length_text)
+{
+    if (mb_strlen($text, 'UTF-8') > $max_length_text) {
+        return true;
+    }
+
+    return false;
 }

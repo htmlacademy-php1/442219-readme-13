@@ -5,3 +5,4 @@
     define('WEEK', 7 * DAY);
     define('MONTH', 5 * WEEK);
     define('DATE_TITLE', 'd.m.Y H:i');
+    define('MAX_LENGTH_TEXT', 300);
