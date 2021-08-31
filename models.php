@@ -15,9 +15,9 @@ function get_content_types()
  *
  * @return string SQL-запрос
  */
-function get_popular_posts_default($limit_posts = '9')
+function get_popular_posts_default($limit_posts = '6')
 {
-    return "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC LIMIT $limit_posts;";
+    return "SELECT posts.view_counter AS views, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id GROUP BY posts.id ORDER BY posts.view_counter DESC LIMIT $limit_posts;";
 }
 
 /**
@@ -62,4 +62,83 @@ function get_subscribers_by_user($author_id = '?')
 function get_posting_by_user($author_id = '?')
 {
     return "SELECT COUNT(posts.user_id) count_posts FROM posts WHERE posts.user_id = $author_id;";
+}
+
+/**
+ * Формирует SQL-запрос для добавления фото поста
+ * @param string $title Заголовок поста
+ * @param string $img_url Ссылка на сохраненный файл изображения
+ * @param int $user_id ID автора поста
+ * @param int $type_id ID типа сонтента поста
+ *
+ * @return string SQL-запрос
+ */
+function add_post_photo($title = '?', $img_url = '?', $user_id = '?', $type_id = 1)
+{
+    return "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
+    VALUES (NOW(), $title, NULL, NULL, $img_url, NULL, NULL, NULL, $user_id, $type_id);";
+}
+
+/**
+ * Формирует SQL-запрос для добавления видео поста
+ * @param string $title Заголовок поста
+ * @param string $video_url Ссылка на видео с youtube
+ * @param int $view_counter Число просмотров
+ * @param int $user_id ID автора поста
+ * @param int $type_id ID типа сонтента поста
+ *
+ * @return string SQL-запрос
+ */
+function add_post_video($title = '?', $video_url = '?', $user_id = '?', $type_id = 2)
+{
+    return "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
+    VALUES (NOW(), $title, NULL, NULL, NULL, $video_url, NULL, NULL, $user_id, $type_id);";
+}
+
+/**
+ * Формирует SQL-запрос для добавления текстового поста
+ * @param string $title Заголовок поста
+ * @param string $text_content Текстовое содержание
+ * @param int $view_counter Число просмотров
+ * @param int $user_id ID автора поста
+ * @param int $type_id ID типа сонтента поста
+ *
+ * @return string SQL-запрос
+ */
+function add_post_text($title = '?', $text_content = '?', $user_id = '?', $type_id = 3)
+{
+    return "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
+    VALUES (NOW(), $title, $text_content, NULL, NULL, NULL, NULL, NULL, $user_id, $type_id);";
+}
+
+/**
+ * Формирует SQL-запрос для добавления поста цитаты
+ * @param string $title Заголовок поста
+ * @param string $text_content Текстовое содержание
+ * @param string $author_quote Автор цитаты
+ * @param int $view_counter Число просмотров
+ * @param int $user_id ID автора поста
+ * @param int $type_id ID типа сонтента поста
+ *
+ * @return string SQL-запрос
+ */
+function add_post_quote($title = '?', $text_content = '?', $author_quote = '?', $user_id = '?', $type_id = 4)
+{
+    return "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
+    VALUES (NOW(), $title, $text_content, $author_quote, NULL, NULL, NULL, NULL, $user_id, $type_id);";
+}
+
+/**
+ * Формирует SQL-запрос для добавления поста ссылки
+ * @param string $title Заголовок поста
+ * @param string $site_url ссылка на сайт
+ * @param int $user_id ID автора поста
+ * @param int $type_id ID типа сонтента поста
+ *
+ * @return string SQL-запрос
+ */
+function add_post_link($title = '?', $site_url = '?', $user_id = '?', $type_id = 5)
+{
+    return "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
+    VALUES (NOW(), $title, NULL, NULL, NULL, NULL, $site_url, NULL, $user_id, $type_id);";
 }

@@ -1,5 +1,27 @@
 <?php
 /**
+ * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
+ *
+ * Примеры использования:
+ * is_date_valid('2019-01-01'); // true
+ * is_date_valid('2016-02-29'); // true
+ * is_date_valid('2019-04-31'); // false
+ * is_date_valid('10.10.2010'); // false
+ * is_date_valid('10/10/2010'); // false
+ *
+ * @param string $date Дата в виде строки
+ *
+ * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
+ */
+function is_date_valid(string $date): bool
+{
+    $format_to_check = 'Y-m-d';
+    $date_time_obj = date_create_from_format($format_to_check, $date);
+
+    return $date_time_obj !== false && array_sum(date_get_last_errors()) === 0;
+}
+
+/**
  * Возвращает корректную форму множественного числа
  * Ограничения: только для целых чисел
  *
@@ -280,13 +302,14 @@ function generate_random_date($index)
  * Отображает шаблон
  * @param string $content HTML секции main шаблона layout.php
  */
-function show_layout($content)
+function show_layout($content, $is_add = false)
 {
     print(include_template('layout.php', [
-        'is_auth' => rand(0, 1),
+        'is_auth' => 1,
         'user_name' => 'Игорь Влащенко',
         'content' => $content,
         'title' => 'readme: популярное',
+        'is_add' => $is_add,
     ]));
 }
 
@@ -402,3 +425,14 @@ function is_text_big($text, $max_length_text)
 
     return false;
 }
+
+/**
+ * Получает значение из POST-запроса
+ */
+function get_post_val($name) {
+    return $_POST[$name] ?? "";
+}
+
+/**
+ *
+ */

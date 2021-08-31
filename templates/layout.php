@@ -101,7 +101,11 @@
                         </div>
                     </li>
                     <li>
-                        <a class="header__post-button button button--transparent" href="adding-post.html">Пост</a>
+                        <?php if (!$is_add) : ?>
+                            <a class="header__post-button button button--transparent" href="add.php">Пост</a>
+                        <?php else : ?>
+                            <a class="header__post-button header__post-button--active button button--transparent" href="index.php">Закрыть</a>
+                        <?php endif; ?>
                     </li>
                 </ul>
             </nav>
