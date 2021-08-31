@@ -1,4 +1,4 @@
-INSERT INTO types (title, class)
+INSERT INTO types (title, alias)
 VALUES
   ('Текст', 'text'),
   ('Цитата', 'quote'),
@@ -75,4 +75,10 @@ SELECT comments.content comment, users.user_name
 INSERT INTO likes SET user_id = 2, post_id = 5;
 
 -- подписаться на пользователя:
-INSERT INTO subscriptions SET author_id = 1, subscriber_id = 5;
+INSERT INTO subscriptions (author_id, subscriber_id)
+VALUES
+(1, 5),
+(2, 4),
+(3, 2),
+(4, 3),
+(5, 1);
