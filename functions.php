@@ -114,18 +114,18 @@ function db_get_prepare_stmt($link, $sql, $data = [])
         $stmt_data = [];
 
         foreach ($data as $value) {
-            $type = 's';
-
-            if (is_int($value)) {
-                $type = 'i';
-            } else {
-                if (is_string($value)) {
+            switch (true) {
+                case is_int($value):
+                    $type = 'i';
+                    break;
+                case is_string($value):
                     $type = 's';
-                } else {
-                    if (is_double($value)) {
-                        $type = 'd';
-                    }
-                }
+                    break;
+                case is_double($value):
+                    $type = 'd';
+                    break;
+                default:
+                    $type = 's';
             }
 
             if ($type) {
