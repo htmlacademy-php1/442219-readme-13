@@ -1,144 +1,83 @@
 <?php
 /**
- * Формирует SQL-запрос для получения типов контента постов
+ * Получает массив типов контента постов
+ * @param object $connect Текущее соединение с сервером MySQL
  *
- * @return string SQL-запрос
+ * @return array Ассоциативный массив типов постов
  */
-function get_content_types()
+function get_content_types($connect)
 {
-    return 'SELECT id, title, alias FROM types;';
+    return get_arr_from_mysql($connect, 'SELECT id, title, alias FROM types;');
 }
 
 /**
- * Формирует SQL-запрос для получения популярных постов для дефолтных состояний сортировки и фильтра типов постов
+ * Получает массив популярных постов для дефолтных состояний сортировки и фильтра типов постов
  * @param string $limit_posts Максимальное количество постов показываемы на странице
+ * @param object $connect Текущее соединение с сервером MySQL
  *
- * @return string SQL-запрос
+ * @return array Ассоциативный массив популярных постов
  */
-function get_popular_posts_default($limit_posts = '6')
+function get_popular_posts_default($connect, $limit_posts = '6')
 {
-    return "SELECT posts.view_counter AS views, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id GROUP BY posts.id ORDER BY posts.view_counter DESC LIMIT $limit_posts;";
+    $sql = "SELECT COUNT(likes.id) likes, posts.view_counter AS views, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY posts.view_counter DESC LIMIT $limit_posts;";
+
+    return get_arr_from_mysql($connect, $sql);
 }
 
 /**
- * Формирует SQL-запрос для получения списка постов с учетом типа контента
- * @param string $type_id Индекс типа сонтента
+ * Получает массив постов с учетом типа контента
+ * @param string $type_id Индекс типа контента постов
+ * @param object $connect Текущее соединение с сервером MySQL
  *
- * @return string SQL-запрос
+ * @return array Массив постов выбранных по типу
  */
-function get_posts_by_type($type_id = '?')
+function get_posts_by_type($connect, $type_id)
 {
-    return "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id WHERE types.id = $type_id GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;";
+    $sql = "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id WHERE types.id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;";
+
+    return db_execute_stmt_all($connect, $sql, [$type_id]);
 }
 
 /**
- * Формирует SQL-запрос для получения поста по его индексу
+ * Получает пост по его индексу
  * @param string $post_id Индекс поста
+ * @param object $connect Текущее соединение с сервером MySQL
  *
- * @return string SQL-запрос
+ * @return array Ассоциативный массив информации о посте выбранного по индексу
  */
-function get_posts_by_index($post_id = '?')
+function get_posts_by_index($connect, $post_id)
 {
-    return "SELECT COUNT(likes.id) likes, posts.id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id WHERE posts.id = $post_id GROUP BY posts.id;";
+    $sql = "SELECT COUNT(likes.id) likes, posts.id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id WHERE posts.id = ? GROUP BY posts.id;";
+
+    return db_execute_stmt_assoc($connect, $sql, [$post_id]);
 }
 
 /**
- * Формирует SQL-запрос для получения числа подписчиков автора поста
+ * Получает число подписчиков у автора поста
  * @param string $author_id ID автора поста
+ * @param object $connect Текущее соединение с сервером MySQL
  *
- * @return string SQL-запрос
+ * @return array Число подписчиков
  */
-function get_subscribers_by_user($author_id = '?')
+function get_subscribers_by_user($connect, $author_id)
 {
-    return "SELECT COUNT(author_id) count_sub FROM subscriptions WHERE author_id = $author_id;";
+    $sql = "SELECT COUNT(author_id) count_sub FROM subscriptions WHERE author_id = ?;";
+
+    $result = db_execute_stmt_assoc($connect, $sql, [$author_id]);
+
+    return $result;
 }
 
 /**
- * Формирует SQL-запрос для получения числа публикаций у автора поста
+ * Получает число публикаций у автора поста
  * @param string $author_id ID автора поста
+ * @param object $connect Текущее соединение с сервером MySQL
  *
- * @return string SQL-запрос
+ * @return array Число публикаций
  */
-function get_posting_by_user($author_id = '?')
+function get_posting_by_user($connect, $author_id)
 {
-    return "SELECT COUNT(posts.user_id) count_posts FROM posts WHERE posts.user_id = $author_id;";
-}
+    $sql = "SELECT COUNT(posts.user_id) count_posts FROM posts WHERE posts.user_id = ?;";
 
-/**
- * Формирует SQL-запрос для добавления фото поста
- * @param string $title Заголовок поста
- * @param string $img_url Ссылка на сохраненный файл изображения
- * @param int $user_id ID автора поста
- * @param int $type_id ID типа сонтента поста
- *
- * @return string SQL-запрос
- */
-function add_post_photo($title = '?', $img_url = '?', $user_id = '?', $type_id = 1)
-{
-    return "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), $title, NULL, NULL, $img_url, NULL, NULL, NULL, $user_id, $type_id);";
-}
-
-/**
- * Формирует SQL-запрос для добавления видео поста
- * @param string $title Заголовок поста
- * @param string $video_url Ссылка на видео с youtube
- * @param int $view_counter Число просмотров
- * @param int $user_id ID автора поста
- * @param int $type_id ID типа сонтента поста
- *
- * @return string SQL-запрос
- */
-function add_post_video($title = '?', $video_url = '?', $user_id = '?', $type_id = 2)
-{
-    return "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), $title, NULL, NULL, NULL, $video_url, NULL, NULL, $user_id, $type_id);";
-}
-
-/**
- * Формирует SQL-запрос для добавления текстового поста
- * @param string $title Заголовок поста
- * @param string $text_content Текстовое содержание
- * @param int $view_counter Число просмотров
- * @param int $user_id ID автора поста
- * @param int $type_id ID типа сонтента поста
- *
- * @return string SQL-запрос
- */
-function add_post_text($title = '?', $text_content = '?', $user_id = '?', $type_id = 3)
-{
-    return "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), $title, $text_content, NULL, NULL, NULL, NULL, NULL, $user_id, $type_id);";
-}
-
-/**
- * Формирует SQL-запрос для добавления поста цитаты
- * @param string $title Заголовок поста
- * @param string $text_content Текстовое содержание
- * @param string $author_quote Автор цитаты
- * @param int $view_counter Число просмотров
- * @param int $user_id ID автора поста
- * @param int $type_id ID типа сонтента поста
- *
- * @return string SQL-запрос
- */
-function add_post_quote($title = '?', $text_content = '?', $author_quote = '?', $user_id = '?', $type_id = 4)
-{
-    return "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), $title, $text_content, $author_quote, NULL, NULL, NULL, NULL, $user_id, $type_id);";
-}
-
-/**
- * Формирует SQL-запрос для добавления поста ссылки
- * @param string $title Заголовок поста
- * @param string $site_url ссылка на сайт
- * @param int $user_id ID автора поста
- * @param int $type_id ID типа сонтента поста
- *
- * @return string SQL-запрос
- */
-function add_post_link($title = '?', $site_url = '?', $user_id = '?', $type_id = 5)
-{
-    return "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), $title, NULL, NULL, NULL, NULL, $site_url, NULL, $user_id, $type_id);";
+    return db_execute_stmt_assoc($connect, $sql, [$author_id]);
 }
