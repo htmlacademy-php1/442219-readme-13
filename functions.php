@@ -184,33 +184,6 @@ function db_execute_stmt_assoc($link, $sql, $data = [])
 }
 
 /**
- * Функция проверяет доступно ли видео по ссылке на youtube
- * @param string $url ссылка на видео
- *
- * @return string Ошибку если валидация не прошла
- */
-function check_youtube_url($url)
-{
-    $id = extract_youtube_id($url);
-
-    set_error_handler(function () {}, E_WARNING);
-    $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=' . $id);
-    restore_error_handler();
-
-    if (!is_array($headers)) {
-        return "Видео по такой ссылке не найдено. Проверьте ссылку на видео";
-    }
-
-    $err_flag = strpos($headers[0], '200') ? 200 : 404;
-
-    if ($err_flag !== 200) {
-        return "Видео по такой ссылке не найдено. Проверьте ссылку на видео";
-    }
-
-    return true;
-}
-
-/**
  * Возвращает код iframe для вставки youtube видео на страницу
  * @param string $youtube_url Ссылка на youtube видео
  * @return string
@@ -425,14 +398,3 @@ function is_text_big($text, $max_length_text)
 
     return false;
 }
-
-/**
- * Получает значение из POST-запроса
- */
-function get_post_val($name) {
-    return $_POST[$name] ?? "";
-}
-
-/**
- *
- */
