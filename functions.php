@@ -1,5 +1,27 @@
 <?php
 /**
+ * Проверяет переданную дату на соответствие формату 'ГГГГ-ММ-ДД'
+ *
+ * Примеры использования:
+ * is_date_valid('2019-01-01'); // true
+ * is_date_valid('2016-02-29'); // true
+ * is_date_valid('2019-04-31'); // false
+ * is_date_valid('10.10.2010'); // false
+ * is_date_valid('10/10/2010'); // false
+ *
+ * @param string $date Дата в виде строки
+ *
+ * @return bool true при совпадении с форматом 'ГГГГ-ММ-ДД', иначе false
+ */
+function is_date_valid(string $date): bool
+{
+    $format_to_check = 'Y-m-d';
+    $date_time_obj = date_create_from_format($format_to_check, $date);
+
+    return $date_time_obj !== false && array_sum(date_get_last_errors()) === 0;
+}
+
+/**
  * Возвращает корректную форму множественного числа
  * Ограничения: только для целых чисел
  *
@@ -92,18 +114,18 @@ function db_get_prepare_stmt($link, $sql, $data = [])
         $stmt_data = [];
 
         foreach ($data as $value) {
-            $type = 's';
-
-            if (is_int($value)) {
-                $type = 'i';
-            } else {
-                if (is_string($value)) {
+            switch (true) {
+                case is_int($value):
+                    $type = 'i';
+                    break;
+                case is_string($value):
                     $type = 's';
-                } else {
-                    if (is_double($value)) {
-                        $type = 'd';
-                    }
-                }
+                    break;
+                case is_double($value):
+                    $type = 'd';
+                    break;
+                default:
+                    $type = 's';
             }
 
             if ($type) {
@@ -159,33 +181,6 @@ function db_execute_stmt_assoc($link, $sql, $data = [])
     $result_stmt = mysqli_stmt_get_result($stmt);
 
     return $result_arr = mysqli_fetch_assoc($result_stmt);
-}
-
-/**
- * Функция проверяет доступно ли видео по ссылке на youtube
- * @param string $url ссылка на видео
- *
- * @return string Ошибку если валидация не прошла
- */
-function check_youtube_url($url)
-{
-    $id = extract_youtube_id($url);
-
-    set_error_handler(function () {}, E_WARNING);
-    $headers = get_headers('https://www.youtube.com/oembed?format=json&url=http://www.youtube.com/watch?v=' . $id);
-    restore_error_handler();
-
-    if (!is_array($headers)) {
-        return "Видео по такой ссылке не найдено. Проверьте ссылку на видео";
-    }
-
-    $err_flag = strpos($headers[0], '200') ? 200 : 404;
-
-    if ($err_flag !== 200) {
-        return "Видео по такой ссылке не найдено. Проверьте ссылку на видео";
-    }
-
-    return true;
 }
 
 /**
@@ -280,13 +275,14 @@ function generate_random_date($index)
  * Отображает шаблон
  * @param string $content HTML секции main шаблона layout.php
  */
-function show_layout($content)
+function show_layout($content, $is_add = false)
 {
     print(include_template('layout.php', [
-        'is_auth' => rand(0, 1),
+        'is_auth' => 1,
         'user_name' => 'Игорь Влащенко',
         'content' => $content,
         'title' => 'readme: популярное',
+        'is_add' => $is_add,
     ]));
 }
 

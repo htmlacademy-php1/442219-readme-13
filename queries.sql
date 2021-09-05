@@ -1,9 +1,9 @@
 INSERT INTO types (title, alias)
 VALUES
+  ('Фото', 'photo'),
+  ('Видео', 'video'),
   ('Текст', 'text'),
   ('Цитата', 'quote'),
-  ('Картинка', 'photo'),
-  ('Видео', 'video'),
   ('Ссылка', 'link');
 
 INSERT INTO users (registered_at, email, user_name, user_password, avatar_url)
@@ -16,13 +16,13 @@ VALUES
 
 INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
 VALUES
-  (NOW(), 'Цитата', 'Мы в жизни любим только раз, а после ищем лишь похожих', 'Неизвестный', NULL, NULL, NULL, 2, 1, 2),
-  (NOW(), 'Игра престолов', 'Не могу дождаться, начала финального сезона своего любимого сериала!', NULL, NULL, NULL, NULL, 10, 2, 1),
-  (NOW(), 'Наконец, обработал фотки!', NULL, NULL, 'rock-medium.jpg', NULL, NULL, 18, 3, 3),
-  (NOW(), 'Моя мечта', NULL, NULL, 'coast-medium.jpg', NULL, NULL, 34, 1, 3),
+  (NOW(), 'Цитата', 'Мы в жизни любим только раз, а после ищем лишь похожих', 'Неизвестный', NULL, NULL, NULL, 2, 1, 4),
+  (NOW(), 'Игра престолов', 'Не могу дождаться, начала финального сезона своего любимого сериала!', NULL, NULL, NULL, NULL, 10, 2, 3),
+  (NOW(), 'Наконец, обработал фотки!', NULL, NULL, 'rock-medium.jpg', NULL, NULL, 18, 3, 1),
+  (NOW(), 'Моя мечта', NULL, NULL, 'coast-medium.jpg', NULL, NULL, 34, 1, 1),
   (NOW(), 'Лучшие курсы', NULL, NULL, NULL, NULL, 'www.htmlacademy.ru', 55, 2, 5),
-  (NOW(), 'Лучший подкаст', NULL, NULL, NULL, 'https://www.youtube.com/watch?v=NuOTVGT6gVk&list=PLMBnwIwFEFHcwuevhsNXkFTcadeX5R1Go', NULL, 8, 4, 4),
-  (NOW(), 'Доклад интрига', NULL, NULL, NULL, 'https://www.youtube.com/watch?v=nIFClfBXuIQ&list=RDCMUCTUyoZMfksbNIHfWJjwr5aQ&index=2', NULL, 12, 5, 4);
+  (NOW(), 'Лучший подкаст', NULL, NULL, NULL, 'https://www.youtube.com/watch?v=NuOTVGT6gVk&list=PLMBnwIwFEFHcwuevhsNXkFTcadeX5R1Go', NULL, 8, 4, 2),
+  (NOW(), 'Доклад интрига', NULL, NULL, NULL, 'https://www.youtube.com/watch?v=nIFClfBXuIQ&list=RDCMUCTUyoZMfksbNIHfWJjwr5aQ&index=2', NULL, 12, 5, 2);
 
 INSERT INTO comments (created_at, content, author_id, post_id)
 VALUES

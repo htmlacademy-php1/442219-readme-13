@@ -11,22 +11,16 @@ if (!$post_id) {
 }
 
 // Выбираем пост по ID в запросе
-$sql_post = get_posts_by_index();
-
-// Выбираем число подписчиков у автора поста
-$sql_subscribers = get_subscribers_by_user();
-
-// Выбираем число публикаций у автора поста
-$sql_posting = get_posting_by_user();
-
-$post = db_execute_stmt_assoc($link, $sql_post, [$post_id]);
+$post = get_posts_by_index($link, $post_id);
 if (!$post) {
     show_error('Запрошенная страница не найдена на сервере: ' . '404');
 }
 
-$subscribers = db_execute_stmt_assoc($link, $sql_subscribers, [$post['id_user']]);
+// Выбираем число подписчиков у автора поста
+$subscribers = get_subscribers_by_user($link, $post['id_user']);
 
-$posting = db_execute_stmt_assoc($link, $sql_posting, [$post['id_user']]);
+// Выбираем число публикаций у автора поста
+$posting = get_posting_by_user($link, $post['id_user']);
 
 $post_content = include_template('post-preview.php', [
     'post' => $post,
