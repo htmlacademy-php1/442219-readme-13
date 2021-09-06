@@ -94,7 +94,7 @@ function get_posting_by_user($connect, $author_id)
 function add_post_photo($connect, $title, $img_url, $user_id, $type_id = 1)
 {
     $sql = "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), ?, NULL, NULL, ?, NULL, NULL, NULL, $user_id, $type_id);";
+    VALUES (NOW(), ?, NULL, NULL, ?, NULL, NULL, 0, $user_id, $type_id);";
 
     $stmt = db_get_prepare_stmt($connect, $sql, [$title, $img_url]);
 
@@ -113,9 +113,9 @@ function add_post_photo($connect, $title, $img_url, $user_id, $type_id = 1)
 function add_post_video($connect, $title, $video_url, $user_id, $type_id = 2)
 {
     $sql = "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), ?, NULL, NULL, NULL, ?, NULL, NULL, $user_id, $type_id);";
+    VALUES (NOW(), ?, NULL, NULL, NULL, ?, NULL, 0, $user_id, $type_id);";
 
-    $stmt = db_get_prepare_stmt($connect, $sql, [$title, $video_url, $user_id, $type_id]);
+    $stmt = db_get_prepare_stmt($connect, $sql, [$title, $video_url]);
 
     return mysqli_stmt_execute($stmt);
 }
@@ -132,9 +132,9 @@ function add_post_video($connect, $title, $video_url, $user_id, $type_id = 2)
 function add_post_text($connect, $title, $text_content, $user_id, $type_id = 3)
 {
     $sql = "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), ?, ?, NULL, NULL, NULL, NULL, NULL, $user_id, $type_id);";
+    VALUES (NOW(), ?, ?, NULL, NULL, NULL, NULL, 0, $user_id, $type_id);";
 
-    $stmt = db_get_prepare_stmt($connect, $sql, [$title, $text_content, $user_id, $type_id]);
+    $stmt = db_get_prepare_stmt($connect, $sql, [$title, $text_content]);
 
     return mysqli_stmt_execute($stmt);
 }
@@ -151,7 +151,7 @@ function add_post_text($connect, $title, $text_content, $user_id, $type_id = 3)
 function add_post_quote($connect, $title, $text_content, $author_quote, $user_id, $type_id = 4)
 {
     $sql = "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, $user_id, $type_id);";
+    VALUES (NOW(), ?, ?, ?, NULL, NULL, NULL, 0, $user_id, $type_id);";
 
     $stmt = db_get_prepare_stmt($connect, $sql, [$title, $text_content, $author_quote]);
 
@@ -170,7 +170,7 @@ function add_post_quote($connect, $title, $text_content, $author_quote, $user_id
 function add_post_link($connect, $title, $site_url, $user_id, $type_id = 5)
 {
     $sql = "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), ?, NULL, NULL, NULL, NULL, ?, NULL, $user_id, $type_id);";
+    VALUES (NOW(), ?, NULL, NULL, NULL, NULL, ?, 0, $user_id, $type_id);";
 
     $stmt = db_get_prepare_stmt($connect, $sql, [$title, $site_url]);
 

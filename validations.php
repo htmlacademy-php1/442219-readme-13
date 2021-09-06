@@ -135,7 +135,7 @@ function validate_hashtags()
  * Проверяет корректность ссылки на фото
  */
 function validate_photo_url($url) {
-    if (isset($url) && !filter_var($url, FILTER_VALIDATE_URL)) {
+    if (!empty($url) && !filter_var($url, FILTER_VALIDATE_URL)) {
         return 'Введите корректную ссылку на фото';
     }
 
@@ -146,7 +146,7 @@ function validate_photo_url($url) {
  * Проверяет корректность URL-адреса видео на youtube
  */
 function validate_video_url($url) {
-    if (!filter_var($url, FILTER_VALIDATE_URL)) {
+    if (!empty($url) && !filter_var($url, FILTER_VALIDATE_URL)) {
         return 'Введите корректную ссылку на видео';
     }
     check_youtube_url($url);
