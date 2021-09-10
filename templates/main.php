@@ -43,10 +43,10 @@
                     </li>
                     <?php foreach ($types as $type): ?>
                         <li class="popular__filters-item filters__item">
-                            <a class="filters__button filters__button--photo button <?php if ($type_id === $type['id']) : ?>filters__button--active<?php endif; ?>" href="index.php?id=<?= $type['id']; ?>">
-                                <span class="visually-hidden"><?= $type['title'] ?></span>
+                            <a class="filters__button filters__button--<?= $type['alias'] ?> button <?php if ($type_id === $type['id']) : ?>filters__button--active<?php endif; ?>" href="index.php?id=<?= $type['id']; ?>">
+                                <span class="visually-hidden"><?= $type['title']; ?></span>
                                 <svg class="filters__icon" width="22" height="18">
-                                    <use xlink:href="#icon-filter-<?= $type['alias'] ?>"></use>
+                                    <use xlink:href="#icon-filter-<?= $type['alias']; ?>"></use>
                                 </svg>
                             </a>
                         </li>

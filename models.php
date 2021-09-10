@@ -19,7 +19,7 @@ function get_content_types($connect)
  */
 function get_popular_posts_default($connect, $limit_posts = '9')
 {
-    $sql = "SELECT COUNT(likes.id) likes, posts.view_counter AS views, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY posts.view_counter DESC LIMIT $limit_posts;";
+    $sql = "SELECT COUNT(likes.id) likes, posts.view_counter AS views, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id LEFT OUTER JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY posts.view_counter DESC LIMIT $limit_posts;";
 
     return get_arr_from_mysql($connect, $sql);
 }
@@ -33,7 +33,7 @@ function get_popular_posts_default($connect, $limit_posts = '9')
  */
 function get_posts_by_type($connect, $type_id)
 {
-    $sql = "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id WHERE types.id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;";
+    $sql = "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id LEFT OUTER JOIN likes ON posts.id = likes.post_id WHERE types.id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;";
 
     return db_execute_stmt_all($connect, $sql, [$type_id]);
 }
@@ -47,7 +47,7 @@ function get_posts_by_type($connect, $type_id)
  */
 function get_posts_by_index($connect, $post_id)
 {
-    $sql = "SELECT COUNT(likes.id) likes, posts.id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id JOIN likes ON posts.id = likes.post_id WHERE posts.id = ? GROUP BY posts.id;";
+    $sql = "SELECT COUNT(likes.id) likes, posts.id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id LEFT OUTER JOIN likes ON posts.id = likes.post_id WHERE posts.id = ? GROUP BY posts.id;";
 
     return db_execute_stmt_assoc($connect, $sql, [$post_id]);
 }
@@ -94,7 +94,7 @@ function get_posting_by_user($connect, $author_id)
 function add_post_photo($connect, $title, $img_url, $user_id, $type_id = 1)
 {
     $sql = "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), ?, NULL, NULL, ?, NULL, NULL, NULL, $user_id, $type_id);";
+    VALUES (NOW(), ?, NULL, NULL, ?, NULL, NULL, 0, $user_id, $type_id);";
 
     $stmt = db_get_prepare_stmt($connect, $sql, [$title, $img_url]);
 
@@ -113,9 +113,9 @@ function add_post_photo($connect, $title, $img_url, $user_id, $type_id = 1)
 function add_post_video($connect, $title, $video_url, $user_id, $type_id = 2)
 {
     $sql = "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), ?, NULL, NULL, NULL, ?, NULL, NULL, $user_id, $type_id);";
+    VALUES (NOW(), ?, NULL, NULL, NULL, ?, NULL, 0, $user_id, $type_id);";
 
-    $stmt = db_get_prepare_stmt($connect, $sql, [$title, $video_url, $user_id, $type_id]);
+    $stmt = db_get_prepare_stmt($connect, $sql, [$title, $video_url]);
 
     return mysqli_stmt_execute($stmt);
 }
@@ -132,9 +132,9 @@ function add_post_video($connect, $title, $video_url, $user_id, $type_id = 2)
 function add_post_text($connect, $title, $text_content, $user_id, $type_id = 3)
 {
     $sql = "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), ?, ?, NULL, NULL, NULL, NULL, NULL, $user_id, $type_id);";
+    VALUES (NOW(), ?, ?, NULL, NULL, NULL, NULL, 0, $user_id, $type_id);";
 
-    $stmt = db_get_prepare_stmt($connect, $sql, [$title, $text_content, $user_id, $type_id]);
+    $stmt = db_get_prepare_stmt($connect, $sql, [$title, $text_content]);
 
     return mysqli_stmt_execute($stmt);
 }
@@ -151,7 +151,7 @@ function add_post_text($connect, $title, $text_content, $user_id, $type_id = 3)
 function add_post_quote($connect, $title, $text_content, $author_quote, $user_id, $type_id = 4)
 {
     $sql = "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), ?, ?, ?, NULL, NULL, NULL, NULL, $user_id, $type_id);";
+    VALUES (NOW(), ?, ?, ?, NULL, NULL, NULL, 0, $user_id, $type_id);";
 
     $stmt = db_get_prepare_stmt($connect, $sql, [$title, $text_content, $author_quote]);
 
@@ -170,9 +170,20 @@ function add_post_quote($connect, $title, $text_content, $author_quote, $user_id
 function add_post_link($connect, $title, $site_url, $user_id, $type_id = 5)
 {
     $sql = "INSERT INTO posts (created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id)
-    VALUES (NOW(), ?, NULL, NULL, NULL, NULL, ?, NULL, $user_id, $type_id);";
+    VALUES (NOW(), ?, NULL, NULL, NULL, NULL, ?, 0, $user_id, $type_id);";
 
     $stmt = db_get_prepare_stmt($connect, $sql, [$title, $site_url]);
+
+    return mysqli_stmt_execute($stmt);
+}
+
+/**
+ * Добавляет нового пользователя в БД
+ */
+function add_new_user($connect, $email, $user_name, $user_password, $avatar_url = '')
+{
+    $sql = "INSERT INTO users (registered_at, email, user_name, user_password, avatar_url) VALUES (NOW(), ?, ?, ?, ?);";
+    $stmt = db_get_prepare_stmt($connect, $sql, [$email, $user_name, $user_password, $avatar_url]);
 
     return mysqli_stmt_execute($stmt);
 }
