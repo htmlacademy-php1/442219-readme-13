@@ -1,6 +1,6 @@
 <?php
 /**
- * Обязательные для заполнения поля формы
+ * Обязательные для заполнения поля форм
  */
 $form_required_fields = [
     'photo' => [
@@ -22,6 +22,12 @@ $form_required_fields = [
     'link' => [
         'heading',
         'post-link',
+    ],
+    'registration' => [
+        'email',
+        'login',
+        'password',
+        'password-repeat',
     ],
 ];
 
@@ -55,6 +61,12 @@ $form_all_fields = [
         'post-link' => FILTER_DEFAULT,
         'hashtags' => FILTER_DEFAULT,
     ],
+    'registration' => [
+        'email' => FILTER_DEFAULT,
+        'login' => FILTER_DEFAULT,
+        'password' => FILTER_DEFAULT,
+        'password-repeat' => FILTER_DEFAULT,
+    ],
 ];
 
 /**
@@ -85,6 +97,42 @@ $rules = [
     'hashtags' => function() {
         return validate_hashtags();
     },
+    'email' => function($email) {
+        return validate_email($email);
+    },
+    'login' => function($value) {
+        return validate_length($value, 5, 50);
+    },
+    'password' => function($value) {
+        return validate_length($value, 5, 50);
+    },
+];
+
+/**
+ * Типы файлов изображений
+ */
+$image_type = [
+    'image/jpeg' => '.jpg',
+    'image/png' => '.png',
+    'image/gif' => '.gif',
+];
+
+/**
+ * Заголовки ошибок
+ */
+$errors_heading = [
+    'heading' => 'Заголовок',
+    'photo-url' => 'Ссылка из интернета',
+    'video-url' => 'Ссылка youtube',
+    'post-text' => 'Текст поста',
+    'quote-text' => 'Текст цитаты',
+    'quote-author' => 'Автор цитаты',
+    'post-link' => 'Ссылка',
+    'hashtags' => 'Теги',
+    'email' => 'Электронная почта',
+    'login' => 'Логин',
+    'password' => 'Пароль',
+    'password-repeat' => 'Повтор пароля',
 ];
 
 /**
@@ -181,10 +229,27 @@ function check_youtube_url($url)
 
 /**
  * Проверяет корректность ссылки
+ * @param string $url ссылка на видео
+ *
+ * @return string Ошибку если валидация не прошла
  */
 function validate_url($url) {
-    if (isset($url) && !filter_var($url, FILTER_VALIDATE_URL)) {
+    if (!empty($url) && !filter_var($url, FILTER_VALIDATE_URL)) {
         return 'Введите корректную ссылку на сайт';
+    }
+
+    return null;
+}
+
+/**
+ * Проверяет корректность электронной почты
+ * @param string $email адрес электронной почты
+ *
+ * @return string Ошибку если валидация не прошла
+ */
+function validate_email($email) {
+    if (!empty($email) && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return 'Введите корректную электронную почту';
     }
 
     return null;

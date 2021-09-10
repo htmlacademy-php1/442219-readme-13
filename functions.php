@@ -398,3 +398,21 @@ function is_text_big($text, $max_length_text)
 
     return false;
 }
+
+/**
+ * Устанавливает расширение файла по его типу
+ * @param string $fyle_type
+ * @param array $arr_type
+ *
+ * @return string Расширение файла или false если нет такого типа
+ */
+function get_file_extension($file_type, $arr_type)
+{
+    foreach ($arr_type as $type => $extension) {
+        if ($file_type === $type) {
+            return $extension;
+        }
+    }
+
+    return false;
+}

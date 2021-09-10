@@ -9,7 +9,7 @@
                     <ul class="adding-post__tabs-list filters__list tabs__list">
                         <?php foreach ($types as $type) : ?>
                             <li class="adding-post__tabs-item filters__item">
-                                <a class="adding-post__tabs-link filters__button filters__button--photo  tabs__item button <?= ($type['alias'] === $type_current) ? 'filters__button--active tabs__item--active' : ''; ?>" href="add.php">
+                                <a class="adding-post__tabs-link filters__button filters__button--<?= $type['alias']; ?>  tabs__item button <?= ($type['alias'] === $type_current) ? 'filters__button--active tabs__item--active' : ''; ?>" href="add.php">
                                 <svg class="filters__icon" width="22" height="18">
                                     <use xlink:href="#icon-filter-photo"></use>
                                 </svg>
@@ -50,7 +50,7 @@
                                     </div>
                                 </div>
                                 <?php if ($errors) : ?>
-                                    <?= include_template('add-errors-block.php', ['errors'=> $errors]); ?>
+                                    <?= include_template('add-errors-block.php', ['errors'=> $errors, 'errors_heading' => $errors_heading]); ?>
                                 <?php endif; ?>
                             </div>
                             <?= include_template('add-photo-file.php'); ?>
@@ -91,7 +91,7 @@
                                     </div>
                                 </div>
                                 <?php if ($errors) : ?>
-                                    <?= include_template('add-errors-block.php', ['errors'=> $errors]); ?>
+                                    <?= include_template('add-errors-block.php', ['errors'=> $errors, 'errors_heading' => $errors_heading]); ?>
                                 <?php endif; ?>
                             </div>
 
@@ -134,7 +134,7 @@
                                     </div>
                                 </div>
                                 <?php if ($errors) : ?>
-                                    <?= include_template('add-errors-block.php', ['errors'=> $errors]); ?>
+                                    <?= include_template('add-errors-block.php', ['errors'=> $errors, 'errors_heading' => $errors_heading]); ?>
                                 <?php endif; ?>
                             </div>
                             <div class="adding-post__buttons">
@@ -176,7 +176,7 @@
                                     </div>
                                 </div>
                                 <?php if ($errors) : ?>
-                                    <?= include_template('add-errors-block.php', ['errors'=> $errors]); ?>
+                                    <?= include_template('add-errors-block.php', ['errors'=> $errors, 'errors_heading' => $errors_heading]); ?>
                                 <?php endif; ?>
                             </div>
                             <div class="adding-post__buttons">
@@ -218,7 +218,7 @@
                                     </div>
                                 </div>
                                 <?php if ($errors) : ?>
-                                    <?= include_template('add-errors-block.php', ['errors'=> $errors]); ?>
+                                    <?= include_template('add-errors-block.php', ['errors'=> $errors, 'errors_heading' => $errors_heading]); ?>
                                 <?php endif; ?>
                             </div>
                             <div class="adding-post__buttons">

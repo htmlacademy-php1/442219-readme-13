@@ -15,17 +15,11 @@ $post_content = include_template('post-add.php', [
 ]);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Тип контента заполненной формы
     $type_current = get_post_val('type-alias');
-
-    // Список обязательных полей с учетом типа формы
     $required_fields = $form_required_fields[$type_current];
-
-    // Массив ошибок
     $errors = [];
-
-    // Проверка полей
     $new_post = filter_input_array(INPUT_POST, $form_all_fields[$type_current], true);
+
     foreach ($new_post as $field_form => $content_field_form) {
         if (isset($rules[$field_form])) {
             $rule = $rules[$field_form];
@@ -36,24 +30,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Работа с файлом
     if ($type_current === 'photo') {
         if (!empty($_FILES['file-photo']['name'])) {
             $tmp_name = $_FILES['file-name']['tmp_name'];
-            $filename = uniqid() . '.jpg';
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $file_type = finfo_file($finfo, $tmp_name);
-
-            if ($file_type !== 'image/jpeg') {
-                $errors['file-photo'] = 'Загрузите изображение в формате JPEG';
-            } else {
+            $file_ext = get_file_extension($file_type, $image_type);
+            if ($file_ext) {
+                $filename = uniqid() . $file_ext;
                 move_uploaded_file($tmp_name, 'uploads/' . $filename);
                 $new_post['photo-url'] = $filename;
+            } else {
+                $errors['file-photo'] = 'Загрузите изображение в формате JPEG, PNG или GIF';
             }
-        } else {
-            // $errors['file-photo'] = 'Вы не загрузили файл';
+        } elseif (empty($new_post['photo-url'])) {
+            $errors['photo-url'] = 'Загрузите фото либо укажите ссылку на файл с фото в интернете';
         }
-        // TODO Дописать логику: обязательно должна быть либо ссылка либо файл с фото
     }
 
     $errors = array_filter($errors);
@@ -63,8 +55,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'types' => $types,
             'type_current' => $type_current,
             'errors' => $errors,
+            'errors_heading' => $errors_heading,
             'new_post' => $new_post,
-        ]); // TODO Доделать отображение реальных ошибок в блоке add-errors-block.php
+        ]);
     } else {
         switch ($type_current) {
             case 'photo':
@@ -92,28 +85,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 show_layout($post_content, true);
-
-// Database table posts:
-// id, created_at, title, text_content, author_quote, img_url, video_url, site_url, view_counter, user_id, type_id
-
-// Обязательные для заполнения поля:
-// Form:                             Database
-// Заголовок      => heading       => title
-// Ссылка YouTube => video-url     => video_url
-// Текст поста    => post-text     => text_content
-// Текст цитаты   => quote-text    => text_content
-// Автор цитаты   => quote-author  => author_quote
-// Ссылка         => post-link     => site_url
-//
-
-// Все заполняемые поля
-// Лейбл	             Тип поля	              Активная вкладка	Обязательность
-// Заголовок	         Простое текстовое поле	  Любая вкладка	    Да
-// Ссылка из интернета	 Простое текстовое поле	  Фото	            Нет => photo-url
-// Ссылка YouTube	     Простое текстовое поле	  Видео	            Да
-// Текст поста	         Поле типа «textarea»	  Текст	            Да
-// Текст цитаты	         Поле типа «textarea»	  Цитата	        Да
-// Автор цитаты          Простое текстовое поле	  Цитата	        Да
-// Ссылка	             Простое текстовое поле	  Ссылка	        Да
-// Теги	                 Простое текстовое поле	  Любая вкладка	    Нет => hashtags
-//

@@ -22,6 +22,7 @@
                 micro blogging
             </p>
         </div>
+        <?php if (basename($_SERVER['SCRIPT_FILENAME']) !== 'registration.php') : ?>
         <form class="header__search-form form" action="#" method="get">
             <div class="header__search">
                 <label class="visually-hidden">Поиск</label>
@@ -35,8 +36,8 @@
             </div>
         </form>
         <div class="header__nav-wrapper">
-            <?php if ($is_auth): ?>
             <nav class="header__nav">
+                <?php if ($is_auth): ?>
                 <ul class="header__my-nav">
                     <li class="header__my-page header__my-page--popular">
                         <a class="header__page-link header__page-link--active" title="Популярный контент">
@@ -108,9 +109,24 @@
                         <?php endif; ?>
                     </li>
                 </ul>
+                <?php endif; ?>
             </nav>
-            <?php endif; ?>
         </div>
+        <?php endif; ?>
+        <?php if (basename($_SERVER['SCRIPT_FILENAME']) === 'registration.php') : ?>
+        <div class="header__nav-wrapper">
+            <nav class="header__nav">
+                <ul class="header__user-nav">
+                    <li class="header__authorization">
+                        <a class="header__user-button header__authorization-button button" href="index.php">Вход</a>
+                    </li>
+                    <li>
+                        <a class="header__user-button header__user-button--active header__register-button button">Регистрация</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <?php endif; ?>
     </div>
 </header>
 <?= $content; ?>

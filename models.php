@@ -176,3 +176,14 @@ function add_post_link($connect, $title, $site_url, $user_id, $type_id = 5)
 
     return mysqli_stmt_execute($stmt);
 }
+
+/**
+ * Добавляет нового пользователя в БД
+ */
+function add_new_user($connect, $email, $user_name, $user_password, $avatar_url = '')
+{
+    $sql = "INSERT INTO users (registered_at, email, user_name, user_password, avatar_url) VALUES (NOW(), ?, ?, ?, ?);";
+    $stmt = db_get_prepare_stmt($connect, $sql, [$email, $user_name, $user_password, $avatar_url]);
+
+    return mysqli_stmt_execute($stmt);
+}
