@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $errors['file-photo'] = 'Загрузите изображение в формате JPEG, PNG или GIF';
             }
         } elseif (empty($new_post['photo-url'])) {
-            $errors['photo-url'] = 'Загрузите фото либо укажите ссылку на файл с фото в интернете';
+            $errors['photo-url'] = 'Загрузите фото или укажите ссылку на фото из интернета';
         }
     }
 
