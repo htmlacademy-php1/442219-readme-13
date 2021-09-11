@@ -1,6 +1,6 @@
 <article class="popular__post post post-<?= $post['alias']; ?>">
     <header class="post__header">
-        <h2><a href="post.php?id=<?= $post['post_id'] ?>"><?= htmlspecialchars($post['title']); ?></a></h2>
+        <h2><a href="post.php?post_id=<?= $post['post_id'] ?>"><?= htmlspecialchars($post['title']); ?></a></h2>
     </header>
     <div class="post__main">
         <?php if($post['alias'] === 'quote'): ?>

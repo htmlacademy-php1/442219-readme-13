@@ -187,3 +187,45 @@ function add_new_user($connect, $email, $user_name, $user_password, $avatar_url 
 
     return mysqli_stmt_execute($stmt);
 }
+
+/**
+ * Получает пользователя по email
+ * @param string $user_email Email пользователя
+ * @param object $connect Текущее соединение с сервером MySQL
+ *
+ * @return array Данные пользователя
+ */
+function get_user_by_email($connect, $user_email)
+{
+    $sql = "SELECT * FROM users WHERE email = ?;";
+
+    return db_execute_stmt_assoc($connect, $sql, [$user_email]);
+}
+
+/**
+ * Получает пользователя по его ID
+ * @param string $user_id ID пользователя
+ * @param object $connect Текущее соединение с сервером MySQL
+ *
+ * @return array Данные пользователя
+ */
+function get_user_by_id($connect, $user_id)
+{
+    $sql = "SELECT * FROM users WHERE id = ?;";
+
+    return db_execute_stmt_assoc($connect, $sql, [$user_id]);
+}
+
+/**
+ * Проверяет есть сессия с пользователем
+ *
+ * @return Если нет сессии перенапрявляет на страницу входа
+ */
+function is_not_session()
+{
+    session_start();
+    if (!isset($_SESSION['user_id'])) {
+        header("Location: /index.php");
+        exit();
+    }
+}

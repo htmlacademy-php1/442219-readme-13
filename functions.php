@@ -275,14 +275,12 @@ function generate_random_date($index)
  * Отображает шаблон
  * @param string $content HTML секции main шаблона layout.php
  */
-function show_layout($content, $is_add = false)
+function show_layout($content, $current_user = [], $title_page = 'readme')
 {
     print(include_template('layout.php', [
-        'is_auth' => 1,
-        'user_name' => 'Игорь Влащенко',
+        'current_user' => $current_user,
         'content' => $content,
-        'title' => 'readme: популярное',
-        'is_add' => $is_add,
+        'title_page' => $title_page,
     ]));
 }
 

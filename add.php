@@ -6,6 +6,10 @@ require_once('connect.php');
 require_once('models.php');
 require_once('validations.php');
 
+is_not_session();
+
+$current_user = get_user_by_id($link, $_SESSION['user_id']);
+
 $types = get_content_types($link);
 $type_current = 'photo';
 
@@ -84,4 +88,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-show_layout($post_content, true);
+show_layout($post_content, $current_user, 'readme: публикация поста');
