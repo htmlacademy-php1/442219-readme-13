@@ -67,6 +67,10 @@ $form_all_fields = [
         'password' => FILTER_DEFAULT,
         'password-repeat' => FILTER_DEFAULT,
     ],
+    'authentication' => [
+        'email' => FILTER_DEFAULT,
+        'password' => FILTER_DEFAULT,
+    ],
 ];
 
 /**
