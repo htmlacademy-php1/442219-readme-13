@@ -19,12 +19,12 @@
                 </a>
             </li>
             <li class="header__my-page header__my-page--feed">
-                <a class="header__page-link" href="feed.php" title="Моя лента">
+                <a class="header__page-link header__page-link--active" href="feed.php" title="Моя лента">
                     <span class="visually-hidden">Моя лента</span>
                 </a>
             </li>
             <li class="header__my-page header__my-page--messages">
-                <a class="header__page-link" href="messages.php" title="Личные сообщения">
+                <a class="header__page-link header__page-link--active" href="messages.php" title="Личные сообщения">
                     <span class="visually-hidden">Личные сообщения</span>
                 </a>
             </li>
@@ -75,7 +75,7 @@
                 </div>
             </li>
             <li>
-                <a class="header__post-button header__post-button--active button button--transparent" href="index.php">Закрыть</a>
+                <a class="header__post-button button button--transparent" href="add.php">Пост</a>
             </li>
         </ul>
     </nav>
