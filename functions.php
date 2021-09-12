@@ -275,10 +275,10 @@ function generate_random_date($index)
  * Отображает шаблон
  * @param string $content HTML секции main шаблона layout.php
  */
-function show_layout($content, $current_user = [], $title_page = 'readme')
+function show_layout($content_header, $content, $title_page = 'readme')
 {
     print(include_template('layout.php', [
-        'current_user' => $current_user,
+        'content_header' => $content_header,
         'content' => $content,
         'title_page' => $title_page,
     ]));
@@ -288,11 +288,12 @@ function show_layout($content, $current_user = [], $title_page = 'readme')
  * Отображает страницу ошибки и завершает скрипт
  * @param string $error_content Описание ошибки
  */
-function show_error($error_content)
-{
-    show_layout(include_template('error.php', ['error' => $error_content]));
-    exit;
-}
+// function show_error($error_content)
+// {
+//     show_layout(include_template('error.php', ['error' => $error_content]));
+//     exit;
+// }
+// TODO Переделать функцию
 
 /**
  * Получает массив по SQL запросу

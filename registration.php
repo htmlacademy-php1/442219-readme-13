@@ -71,4 +71,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-show_layout($reg_content, true);
+$layout_header = include_template('registration-header.php');
+
+show_layout($layout_header, $reg_content, 'readme: публикация поста');

@@ -46,4 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-print($page_content);
+$layout_header = include_template('enter-header.php');
+
+show_layout($layout_header, $page_content, 'readme: вход на сайт');

@@ -88,4 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-show_layout($post_content, $current_user, 'readme: публикация поста');
+$layout_header = include_template('add-header.php', ['current_user' => $current_user]);
+
+show_layout($layout_header, $post_content, 'readme: публикация поста');

@@ -12,7 +12,7 @@ $current_user = get_user_by_id($link, $_SESSION['user_id']);
 $types = get_content_types($link);
 
 if (!$types) {
-    show_error('Ошибка чтения БД: ' . mysqli_error($link));
+    // show_error('Ошибка чтения БД: ' . mysqli_error($link));
 };
 
 $type_id = filter_input(INPUT_GET, 'type_id');
@@ -24,8 +24,10 @@ if ($type_id) {
 };
 
 if (!$posts) {
-    show_error('Ошибка чтения БД: ' . mysqli_error($link));
+    // show_error('Ошибка чтения БД: ' . mysqli_error($link));
 };
+
+$layout_header = include_template('popular-header.php', ['current_user' => $current_user]);
 
 $layout_content = include_template('main.php', [
     'posts' => $posts,
@@ -33,4 +35,4 @@ $layout_content = include_template('main.php', [
     'type_id' => $type_id,
 ]);
 
-show_layout($layout_content, $current_user, 'readme: популярное');
+show_layout($layout_header, $layout_content, 'readme: популярное');
