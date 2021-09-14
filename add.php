@@ -9,6 +9,8 @@ require_once('validations.php');
 is_not_session();
 
 $current_user = get_user_by_id($link, $_SESSION['user_id']);
+$is_add = is_current_page('add.php');
+$link_ref = $_SERVER['HTTP_REFERER'];
 
 $types = get_content_types($link);
 $type_current = 'photo';
@@ -88,6 +90,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$layout_header = include_template('add-header.php', ['current_user' => $current_user]);
+$layout_header = include_template('main-header.php', [
+    'current_user' => $current_user,
+    'is_add' => $is_add,
+    'link_ref' => $link_ref,
+]);
 
 show_layout($layout_header, $post_content, 'readme: публикация поста');

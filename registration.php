@@ -25,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if (empty($errors['email'])) {
         $email = mysqli_real_escape_string($link, $new_user['email']);
-        // TODO Сделать запрос отдельной функцией в моделе
         $sql = "SELECT id FROM users WHERE email = '$email'";
         $res = mysqli_query($link, $sql);
         if (mysqli_num_rows($res) > 0) {
@@ -73,4 +72,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $layout_header = include_template('registration-header.php');
 
-show_layout($layout_header, $reg_content, 'readme: публикация поста');
+show_layout($layout_header, $reg_content, 'readme: регистрация аккаунта');

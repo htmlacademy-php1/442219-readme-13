@@ -2,18 +2,18 @@
     <header class="post__header post__author">
         <a class="post__author-link" href="#" title="Автор">
             <div class="post__avatar-wrapper">
-                <img class="post__author-avatar" src="img/userpic-tanya.jpg" alt="Аватар пользователя">
+                <img class="post__author-avatar" src="<?= $post['avatar_url'] ?>" alt="Аватар пользователя">
             </div>
             <div class="post__info">
-                <b class="post__author-name">Таня Фирсова</b>
+                <b class="post__author-name"><?= $post['author'] ?></b>
                 <span class="post__time">25 минут назад</span>
             </div>
         </a>
     </header>
     <div class="post__main">
-        <h2><a href="#">Полезный пост про Байкал</a></h2>
+        <h2><a href="#"><?= $post['title'] ?></a></h2>
         <p>
-            Озеро Байкал – огромное древнее озеро в горах Сибири к северу от монгольской границы. Байкал считается самым глубоким озером в мире. Он окружен сетью пешеходных маршрутов, называемых Большой байкальской тропой. Деревня Листвянка, расположенная на западном берегу озера, – популярная отправная точка для летних экскурсий. Зимой здесь можно кататься на коньках и собачьих упряжках.
+            <?= $post['text_content'] ?>
         </p>
         <a class="post-text__more-link" href="#">Читать далее</a>
     </div>
@@ -26,7 +26,7 @@
                 <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                     <use xlink:href="#icon-heart-active"></use>
                 </svg>
-                <span>250</span>
+                <span><?= $post['likes'] ?></span>
                 <span class="visually-hidden">количество лайков</span>
             </a>
             <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">

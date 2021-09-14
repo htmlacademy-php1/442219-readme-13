@@ -179,6 +179,7 @@ function add_post_link($connect, $title, $site_url, $user_id, $type_id = 5)
 
 /**
  * Добавляет нового пользователя в БД
+ * @param object $connect Текущее соединение с сервером MySQL
  */
 function add_new_user($connect, $email, $user_name, $user_password, $avatar_url = '')
 {
@@ -228,4 +229,18 @@ function is_not_session()
         header("Location: /index.php");
         exit();
     }
+}
+
+/**
+ * Получает посты с результами полнотекстового поиска
+ * @param object $connect Текущее соединение с сервером MySQL
+ * @param string $word Искомое слово
+ *
+ * @return array Посты с найденным словом по убыванию релевантности
+ */
+function get_posts_by_search($connect, $word)
+{
+    $sql = "SELECT COUNT(likes.id) likes, posts.id, posts.created_at, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id LEFT OUTER JOIN likes ON posts.id = likes.post_id WHERE MATCH(posts.title, posts.text_content) AGAINST(?);";
+
+    return db_execute_stmt_all($connect, $sql, [$word]);
 }

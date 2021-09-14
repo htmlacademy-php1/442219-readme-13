@@ -2,10 +2,10 @@
     <header class="post__header post__author">
         <a class="post__author-link" href="#" title="Автор">
             <div class="post__avatar-wrapper">
-                <img class="post__author-avatar" src="img/userpic-petro.jpg" alt="Аватар пользователя">
+                <img class="post__author-avatar" src="<?= $post['avatar_url'] ?>" alt="Аватар пользователя">
             </div>
             <div class="post__info">
-                <b class="post__author-name">Петр Демин</b>
+                <b class="post__author-name"><?= $post['author'] ?></b>
                 <span class="post__time">5 часов назад</span>
             </div>
         </a>
@@ -13,25 +13,8 @@
     <div class="post__main">
         <div class="post-video__block">
             <div class="post-video__preview">
-                <img src="img/coast.jpg" alt="Превью к видео" width="760" height="396">
+                <?= embed_youtube_video($post['video_url']); ?>
             </div>
-            <div class="post-video__control">
-                <button class="post-video__play post-video__play--paused button button--video" type="button"><span class="visually-hidden">Запустить видео</span></button>
-                <div class="post-video__scale-wrapper">
-                    <div class="post-video__scale">
-                        <div class="post-video__bar">
-                        <div class="post-video__toggle"></div>
-                        </div>
-                    </div>
-                </div>
-                <button class="post-video__fullscreen post-video__fullscreen--inactive button button--video" type="button"><span class="visually-hidden">Полноэкранный режим</span></button>
-            </div>
-            <button class="post-video__play-big button" type="button">
-                <svg class="post-video__play-big-icon" width="27" height="28">
-                    <use xlink:href="#icon-video-play-big"></use>
-                </svg>
-                <span class="visually-hidden">Запустить проигрыватель</span>
-            </button>
         </div>
     </div>
     <footer class="post__footer post__indicators">
@@ -43,7 +26,7 @@
                 <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                     <use xlink:href="#icon-heart-active"></use>
                 </svg>
-                <span>250</span>
+                <span><?= $post['likes'] ?></span>
                 <span class="visually-hidden">количество лайков</span>
             </a>
             <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">

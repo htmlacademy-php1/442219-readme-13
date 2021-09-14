@@ -1,7 +1,7 @@
 <form class="header__search-form form" action="search.php" method="get">
     <div class="header__search">
         <label class="visually-hidden">Поиск</label>
-        <input class="header__search-input form__input" type="search">
+        <input class="header__search-input form__input" type="search" name="search" value="<?= $query ?? ''; ?>">
         <button class="header__search-button button" type="submit">
             <svg class="header__search-icon" width="18" height="18">
                 <use xlink:href="#icon-search"></use>
@@ -14,17 +14,17 @@
     <nav class="header__nav">
         <ul class="header__my-nav">
             <li class="header__my-page header__my-page--popular">
-                <a class="header__page-link header__page-link--active" href="popular.php" title="Популярный контент">
+                <a class="header__page-link <?= isset($is_popular) ? 'header__page-link--active' : ''; ?>" <?= isset($is_popular) ? '' : 'href="popular.php"'; ?> title="Популярный контент">
                     <span class="visually-hidden">Популярный контент</span>
                 </a>
             </li>
             <li class="header__my-page header__my-page--feed">
-                <a class="header__page-link" href="feed.php" title="Моя лента">
+                <a class="header__page-link <?= isset($is_feed) ? 'header__page-link--active' : ''; ?>" <?= isset($is_feed) ? '' : 'href="feed.php"'; ?> title="Моя лента">
                     <span class="visually-hidden">Моя лента</span>
                 </a>
             </li>
             <li class="header__my-page header__my-page--messages">
-                <a class="header__page-link" href="messages.php" title="Личные сообщения">
+                <a class="header__page-link <?= isset($is_messages) ? 'header__page-link--active' : ''; ?>" <?= isset($is_messages) ? '' : 'href="messages.php"'; ?> title="Личные сообщения">
                     <span class="visually-hidden">Личные сообщения</span>
                 </a>
             </li>
@@ -33,7 +33,7 @@
             <li class="header__profile">
                 <a class="header__profile-link" href="#">
                     <div class="header__avatar-wrapper">
-                        <img class="header__profile-avatar" src="<?= (!empty($current_user['avatar_url'])) ? : 'img/avatar-default.png'; ?>" width="40" height="40" alt="Аватар профиля">
+                        <img class="header__profile-avatar" src="<?= !empty($current_user['avatar_url']) ? $current_user['avatar_url'] : 'img/avatar-default.png'; ?>" width="40" height="40" alt="Аватар профиля">
                     </div>
                     <div class="header__profile-name">
                         <span>
@@ -75,7 +75,11 @@
                 </div>
             </li>
             <li>
-                <a class="header__post-button header__post-button--active button button--transparent" href="index.php">Закрыть</a>
+                <?php if (isset($is_add)) : ?>
+                <a class="header__post-button header__post-button--active button button--transparent" href="<?= ($link_ref) ?? 'index.php'; ?>">Закрыть</a>
+                <?php else : ?>
+                <a class="header__post-button button button--transparent" href="add.php">Пост</a>
+                <?php endif; ?>
             </li>
         </ul>
     </nav>

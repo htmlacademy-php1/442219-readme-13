@@ -83,3 +83,5 @@ CREATE TABLE IF NOT EXISTS posts_hashtags (
   FOREIGN KEY (post_id) REFERENCES posts(id) ON DELETE CASCADE ON UPDATE CASCADE,
   FOREIGN KEY (hashtag_id) REFERENCES hashtags(id) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB;
+
+CREATE FULLTEXT INDEX post_search ON posts(title, text_content);
