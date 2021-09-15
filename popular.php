@@ -32,7 +32,7 @@ if (!$posts) {
     show_error($layout_header, 'Ошибка чтения БД: ' . mysqli_error($link),'readme: популярные записи');
 };
 
-$layout_content = include_template('main.php', [
+$layout_content = include_template('popular-main.php', [
     'posts' => $posts,
     'types' => $types,
     'type_id' => $type_id,

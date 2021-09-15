@@ -56,7 +56,7 @@
         </div>
         <div class="popular__posts">
             <?php foreach ($posts as $index => $post): ?>
-                <?= include_template('post-popular.php', ['index' => $index, 'post' => $post]); ?>
+                <?= include_template('popular-post.php', ['index' => $index, 'post' => $post]); ?>
             <?php endforeach; ?>
         </div>
     </div>

@@ -20,7 +20,7 @@ function get_content_types($connect)
 function get_popular_posts_default($connect, $limit_posts = '9')
 {
     $sql = "SELECT COUNT(likes.id) likes, posts.view_counter AS views, posts.id AS post_id, posts.title, posts.text_content, "
-    . "posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url "
+    . "posts.author_quote, posts.img_url, posts.video_url, posts.site_url, posts.user_id, user_name AS author, types.alias, users.avatar_url "
     . "FROM posts "
     . "JOIN users ON posts.user_id = users.id "
     . "JOIN types ON posts.type_id = types.id "
@@ -40,7 +40,7 @@ function get_popular_posts_default($connect, $limit_posts = '9')
 function get_posts_by_type($connect, $type_id)
 {
     $sql = "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, "
-    . "posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url "
+    . "posts.img_url, posts.video_url, posts.site_url, posts.user_id, user_name AS author, types.alias, users.avatar_url "
     . "FROM posts "
     . "JOIN users ON posts.user_id = users.id "
     . "JOIN types ON posts.type_id = types.id "
@@ -295,4 +295,21 @@ function get_likes_by_posts($connect, $post_id)
 function get_posts_by_hashtags($link, $hashtag)
 {
 // TODO Доделать функцию
+}
+
+/**
+ * Получает информацию о пользователе по его ID
+ * @param object $connect Текущее соединение с сервером MySQL
+ * @param string $user_id ID пользователя
+ *
+ * @return array Информация о пользователе
+ */
+function get_profile_user_by_index($connect, $user_id)
+{
+    $sql = "SELECT * "
+    . "FROM users "
+    // . "JOIN posts on posts.id = likes.post_id "
+    . "WHERE users.id = ?;";
+
+    return db_execute_stmt_assoc($connect, $sql, [$user_id]);
 }
