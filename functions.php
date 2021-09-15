@@ -71,6 +71,7 @@ function get_noun_plural_form(int $number, string $one, string $two, string $man
  * Подключает шаблон, передает туда данные и возвращает итоговый HTML контент
  * @param string $name Путь к файлу шаблона относительно папки templates
  * @param array $data Ассоциативный массив с данными для шаблона
+ *
  * @return string Итоговый HTML
  */
 function include_template($name, array $data = [])
@@ -186,6 +187,7 @@ function db_execute_stmt_assoc($link, $sql, $data = [])
 /**
  * Возвращает код iframe для вставки youtube видео на страницу
  * @param string $youtube_url Ссылка на youtube видео
+ *
  * @return string
  */
 function embed_youtube_video($youtube_url)
@@ -204,6 +206,7 @@ function embed_youtube_video($youtube_url)
 /**
  * Возвращает img-тег с обложкой видео для вставки на страницу
  * @param string $youtube_url Ссылка на youtube видео
+ *
  * @return string
  */
 function embed_youtube_cover($youtube_url)
@@ -222,6 +225,7 @@ function embed_youtube_cover($youtube_url)
 /**
  * Извлекает из ссылки на youtube видео его уникальный ID
  * @param string $youtube_url Ссылка на youtube видео
+ *
  * @return array
  */
 function extract_youtube_id($youtube_url)
@@ -245,7 +249,9 @@ function extract_youtube_id($youtube_url)
 }
 
 /**
- * @param $index
+ * Генерирует случайную дату взависимости от индекса постта
+ * @param $index Индекс поста
+ *
  * @return false|string
  */
 function generate_random_date($index)
@@ -273,12 +279,15 @@ function generate_random_date($index)
 
 /**
  * Отображает шаблон
+ * @param string $content_header HTML секции header шаблона layout.php
  * @param string $content HTML секции main шаблона layout.php
+ *
+ * @return string Показ layout.php
  */
-function show_layout($content, $current_user = [], $title_page = 'readme')
+function show_layout($content_header, $content, $title_page = 'readme')
 {
     print(include_template('layout.php', [
-        'current_user' => $current_user,
+        'content_header' => $content_header,
         'content' => $content,
         'title_page' => $title_page,
     ]));
@@ -287,10 +296,12 @@ function show_layout($content, $current_user = [], $title_page = 'readme')
 /**
  * Отображает страницу ошибки и завершает скрипт
  * @param string $error_content Описание ошибки
+ *
+ * @return string Показ layout.php с ошибкой
  */
-function show_error($error_content)
+function show_error($content_header, $error_content, $title_page)
 {
-    show_layout(include_template('error.php', ['error' => $error_content]));
+    show_layout($content_header, include_template('error.php', ['error' => $error_content]), $title_page);
     exit;
 }
 
@@ -324,6 +335,8 @@ function format_date($date, $format)
 /**
  * Вычисляет время прошедшее после публикации поста
  * @param string $date_public Дата публикации поста
+ *
+ * @return string Прошедшее время
  */
 function get_diff_time_public_post($date_public)
 {
@@ -359,6 +372,8 @@ function get_diff_time_public_post($date_public)
  * Урезает текст поста
  * @param string $text Текст поста
  * @param int $length Максимальное число символов, отображаемых в тексте поста
+ *
+ * @return string Урезанный текст если он большой
  */
 function cut_text($text, $length = MAX_LENGTH_TEXT)
 {
@@ -387,6 +402,8 @@ function cut_text($text, $length = MAX_LENGTH_TEXT)
  * Определяет что длина текста поста больше максимума
  * @param string $text Текст поста
  * @param int $max_length_text Максимальное число символов, отображаемых в тексте поста
+ *
+ * return bool Текст большой или нет
  */
 function is_text_big($text, $max_length_text)
 {
@@ -410,6 +427,33 @@ function get_file_extension($file_type, $arr_type)
         if ($file_type === $type) {
             return $extension;
         }
+    }
+
+    return false;
+}
+
+/**
+ * Получает значение из массива $_GET
+ * @param string $name Значение атрибута поля формы
+ *
+ * @return string Значение из массива $_GET
+ */
+function get_value_get($name)
+{
+    return htmlspecialchars($_GET[$name] ?? '');
+}
+
+/**
+ * Подтверждает нахождение на странице
+ * @param string $page_url Путь страницы
+ *
+ * @return bool True если на этой странице, иначе false
+ */
+function is_current_page($page_url)
+{
+    if (basename($_SERVER['SCRIPT_FILENAME']) === $page_url) {
+
+        return true;
     }
 
     return false;
