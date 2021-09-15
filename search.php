@@ -18,6 +18,13 @@ if ($query) {
     $posts_search = get_posts_by_search($link, $query);
 }
 
+if ($posts_search) {
+    foreach ($posts_search as $index => $post) {
+        $post['likes'] = get_likes_by_posts($link, $post['id'])['count_likes'];
+        $posts_search[$index] = $post;
+    }
+}
+
 $layout_header = include_template('main-header.php', [
     'current_user' => $current_user,
     'query' => $query,

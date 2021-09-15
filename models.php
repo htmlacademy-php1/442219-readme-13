@@ -19,7 +19,13 @@ function get_content_types($connect)
  */
 function get_popular_posts_default($connect, $limit_posts = '9')
 {
-    $sql = "SELECT COUNT(likes.id) likes, posts.view_counter AS views, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id LEFT OUTER JOIN likes ON posts.id = likes.post_id GROUP BY posts.id ORDER BY posts.view_counter DESC LIMIT $limit_posts;";
+    $sql = "SELECT COUNT(likes.id) likes, posts.view_counter AS views, posts.id AS post_id, posts.title, posts.text_content, "
+    . "posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url "
+    . "FROM posts "
+    . "JOIN users ON posts.user_id = users.id "
+    . "JOIN types ON posts.type_id = types.id "
+    . "LEFT OUTER JOIN likes ON posts.id = likes.post_id "
+    . "GROUP BY posts.id ORDER BY posts.view_counter DESC LIMIT $limit_posts;";
 
     return get_arr_from_mysql($connect, $sql);
 }
@@ -33,7 +39,13 @@ function get_popular_posts_default($connect, $limit_posts = '9')
  */
 function get_posts_by_type($connect, $type_id)
 {
-    $sql = "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id LEFT OUTER JOIN likes ON posts.id = likes.post_id WHERE types.id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;";
+    $sql = "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, "
+    . "posts.img_url, posts.video_url, posts.site_url, user_name AS author, types.alias, users.avatar_url "
+    . "FROM posts "
+    . "JOIN users ON posts.user_id = users.id "
+    . "JOIN types ON posts.type_id = types.id "
+    . "LEFT OUTER JOIN likes ON posts.id = likes.post_id "
+    . "WHERE types.id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;";
 
     return db_execute_stmt_all($connect, $sql, [$type_id]);
 }
@@ -47,7 +59,13 @@ function get_posts_by_type($connect, $type_id)
  */
 function get_posts_by_index($connect, $post_id)
 {
-    $sql = "SELECT COUNT(likes.id) likes, posts.id, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id LEFT OUTER JOIN likes ON posts.id = likes.post_id WHERE posts.id = ? GROUP BY posts.id;";
+    $sql = "SELECT COUNT(likes.id) likes, posts.id, posts.title, posts.text_content, posts.author_quote, posts.img_url, "
+    . "posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url "
+    . "FROM posts "
+    . "JOIN users ON posts.user_id = users.id "
+    . "JOIN types ON posts.type_id = types.id "
+    . "LEFT OUTER JOIN likes ON posts.id = likes.post_id "
+    . "WHERE posts.id = ? GROUP BY posts.id;";
 
     return db_execute_stmt_assoc($connect, $sql, [$post_id]);
 }
@@ -234,13 +252,47 @@ function is_not_session()
 /**
  * Получает посты с результами полнотекстового поиска
  * @param object $connect Текущее соединение с сервером MySQL
- * @param string $word Искомое слово
+ * @param string $query Искомое слово
  *
  * @return array Посты с найденным словом по убыванию релевантности
  */
-function get_posts_by_search($connect, $word)
+function get_posts_by_search($connect, $query)
 {
-    $sql = "SELECT COUNT(likes.id) likes, posts.id, posts.created_at, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url FROM posts JOIN users ON posts.user_id = users.id JOIN types ON posts.type_id = types.id LEFT OUTER JOIN likes ON posts.id = likes.post_id WHERE MATCH(posts.title, posts.text_content) AGAINST(?);";
+    $sql = "SELECT posts.id, posts.created_at, posts.title, posts.text_content, posts.author_quote, posts.img_url, posts.video_url, "
+    . "posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url "
+    . "FROM posts JOIN users ON posts.user_id = users.id "
+    . "JOIN types ON posts.type_id = types.id "
+    // . "LEFT OUTER JOIN likes ON posts.id = likes.post_id "
+    . "WHERE MATCH(posts.title, posts.text_content) AGAINST(?);";
 
-    return db_execute_stmt_all($connect, $sql, [$word]);
+    return db_execute_stmt_all($connect, $sql, [$query]);
+}
+
+/**
+ * Получает количество лайков для поста
+ * @param object $connect Текущее соединение с сервером MySQL
+ * @param string $post_id ID поста
+ *
+ * @return array Количество лайков
+ */
+function get_likes_by_posts($connect, $post_id)
+{
+    $sql = "SELECT posts.id AS post_id, COUNT(likes.id) count_likes "
+    . "FROM likes "
+    . "JOIN posts on posts.id = likes.post_id "
+    . "WHERE post_id = ?;";
+
+    return db_execute_stmt_assoc($connect, $sql, [$post_id]);
+}
+
+/**
+ * Получает посты с результами поиска по хэштегам
+ * @param object $connect Текущее соединение с сервером MySQL
+ * @param string $hashtag Искомый тег
+ *
+ * @return array Посты с найденным тегом в хронологическом порядке начиная с самых новых
+ */
+function get_posts_by_hashtags($link, $hashtag)
+{
+// TODO Доделать функцию
 }

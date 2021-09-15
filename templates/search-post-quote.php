@@ -2,10 +2,10 @@
     <header class="post__header post__author">
         <a class="post__author-link" href="#" title="Автор">
             <div class="post__avatar-wrapper">
-                <img class="post__author-avatar" src="<?= $post['avatar_url'] ?>" alt="Аватар пользователя">
+                <img class="post__author-avatar" src="<?= $post['avatar_url']; ?>" alt="Аватар пользователя">
             </div>
             <div class="post__info">
-                <b class="post__author-name"><?= $post['author'] ?></b>
+                <b class="post__author-name"><?= $post['author']; ?></b>
                 <span class="post__time">2 дня назад</span>
             </div>
         </a>
@@ -13,9 +13,9 @@
     <div class="post__main">
         <blockquote>
             <p>
-                <?= $post['text_content'] ?>
+                <?= $post['text_content']; ?>
             </p>
-            <cite><?= $post['author_quote'] ?></cite>
+            <cite><?= $post['author_quote']; ?></cite>
         </blockquote>
     </div>
     <footer class="post__footer post__indicators">
@@ -27,7 +27,7 @@
                 <svg class="post__indicator-icon post__indicator-icon--like-active" width="20" height="17">
                     <use xlink:href="#icon-heart-active"></use>
                 </svg>
-                <span><?= $post['likes'] ?></span>
+                <span><?= $post['likes'] ?? '0'; ?></span>
                 <span class="visually-hidden">количество лайков</span>
             </a>
             <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
