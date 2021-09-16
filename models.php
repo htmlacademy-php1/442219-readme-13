@@ -59,7 +59,7 @@ function get_posts_by_type($connect, $type_id)
  */
 function get_posts_by_index($connect, $post_id)
 {
-    $sql = "SELECT COUNT(likes.id) likes, posts.id, posts.title, posts.text_content, posts.author_quote, posts.img_url, "
+    $sql = "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, "
     . "posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url "
     . "FROM posts "
     . "JOIN users ON posts.user_id = users.id "
@@ -386,6 +386,49 @@ function del_id_subscriber_by_user($connect, $author_id, $subscriber_id)
     $sql = "DELETE FROM subscriptions "
     . "WHERE subscriptions.author_id = ? AND subscriptions.subscriber_id = ?;";
     $stmt = db_get_prepare_stmt($connect, $sql, [$author_id, $subscriber_id]);
+
+    return mysqli_stmt_execute($stmt);
+}
+
+/**
+ * Поличает имя страницы с GET запросом с которой пришли на текущию страницу
+ *
+ * @return string Имя страницы с GET запросом
+ */
+function get_path_referer()
+{
+    return end(explode("/", $_SERVER['HTTP_REFERER']));
+}
+
+/**
+ * Получаем лайки на пост от пользователя
+ * @param object $connect Текущее соединение с сервером MySQL
+ * @param string $user_id ID пользователя
+ * @param string $post_id ID поста
+ *
+ * @return array Информация о пользователе
+ */
+function get_like_by_post($connect, $post_id, $user_id)
+{
+    $sql = "SELECT * FROM likes "
+    . "WHERE likes.post_id = ? AND likes.user_id = ?;";
+
+    return db_execute_stmt_assoc($connect, $sql, [$post_id, $user_id]);
+}
+
+/**
+ * Добавляет лайк посту
+ * @param object $connect Текущее соединение с сервером MySQL
+ * @param string $user_id ID пользователя
+ * @param string $post_id ID поста
+ *
+ * @return bool Успешное выполнение
+ */
+function add_like_post($connect, $user_id, $post_id)
+{
+    $sql = "INSERT INTO likes (user_id, post_id) "
+    . "VALUES (?, ?);";
+    $stmt = db_get_prepare_stmt($connect, $sql, [$user_id, $post_id]);
 
     return mysqli_stmt_execute($stmt);
 }

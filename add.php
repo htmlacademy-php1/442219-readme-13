@@ -10,7 +10,7 @@ is_not_session();
 
 $current_user = get_user_by_id($link, $_SESSION['user_id']);
 $is_add = is_current_page('add.php');
-$link_ref = $_SERVER['HTTP_REFERER'];
+$link_ref = get_path_referer();
 
 $types = get_content_types($link);
 $type_current = 'photo';
