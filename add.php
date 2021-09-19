@@ -63,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'new_post' => $new_post,
         ]);
     } else {
+        // TODO Переписать: выбор переменной и в конце одна функция
         switch ($type_current) {
             case 'photo':
                 $new_post_bd = add_post_photo($link, $new_post['heading'], $new_post['photo-url'], 1);

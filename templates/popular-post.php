@@ -57,6 +57,7 @@
                 <div class="post__avatar-wrapper">
                     <img class="post__author-avatar" src="img/<?= $post['avatar_url']; ?>" alt="Аватар пользователя">
                 </div>
+                <!-- TODO Исправить дату -->
                 <div class="post__info">
                     <b class="post__author-name"><?= htmlspecialchars($post['author']); ?></b>
                     <?php $public_date = generate_random_date($index); ?>
@@ -76,6 +77,7 @@
                     <span><?= $post['likes']; ?></span>
                     <span class="visually-hidden">количество лайков</span>
                 </a>
+                <!-- TODO Добавить комментарии -->
                 <a class="post__indicator post__indicator--comments button" href="#" title="Комментарии">
                     <svg class="post__indicator-icon" width="19" height="17">
                         <use xlink:href="#icon-comment"></use>

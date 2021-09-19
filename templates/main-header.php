@@ -1,7 +1,7 @@
 <form class="header__search-form form" action="search.php" method="get">
     <div class="header__search">
         <label class="visually-hidden">Поиск</label>
-        <input class="header__search-input form__input" type="search" name="search" value="<?= $query ?? ''; ?>">
+        <input class="header__search-input form__input" type="search" name="search" value="<?= htmlspecialchars($query) ?? ''; ?>">
         <button class="header__search-button button" type="submit">
             <svg class="header__search-icon" width="18" height="18">
                 <use xlink:href="#icon-search"></use>
@@ -33,7 +33,7 @@
             <li class="header__profile">
                 <a class="header__profile-link" href="#">
                     <div class="header__avatar-wrapper">
-                        <img class="header__profile-avatar" src="<?= !empty($current_user['avatar_url']) ? $current_user['avatar_url'] : 'img/avatar-default.png'; ?>" width="40" height="40" alt="Аватар профиля">
+                        <img class="header__profile-avatar" src="<?= !empty($current_user['avatar_url']) ? htmlspecialchars($current_user['avatar_url']) : 'img/avatar-default.png'; ?>" width="40" height="40" alt="Аватар профиля">
                     </div>
                     <div class="header__profile-name">
                         <span>

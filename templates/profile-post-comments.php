@@ -19,6 +19,7 @@
     </li>
     <?php endforeach; ?>
 </ul>
+<!-- TODO Разобраться с этой ссылкой -->
 <!-- <a class="comments__more-link" href="#">
     <span>Показать все комментарии</span>
     <sup class="comments__amount">45</sup>

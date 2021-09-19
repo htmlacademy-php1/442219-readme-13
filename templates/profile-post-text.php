@@ -45,6 +45,7 @@
         <time class="post__time" datetime="2019-01-30T23:41">15 минут назад</time>
     </div>
     <ul class="post__tags">
+        <!-- TODO Разобраться с хэштегами -->
         <li><a href="#">#nature</a></li>
         <li><a href="#">#globe</a></li>
         <li><a href="#">#photooftheday</a></li>
@@ -59,7 +60,7 @@
             <?= include_template('profile-post-comments.php', ['user' => $user,'post' => $post, 'is_show_comments' => $is_show_comments]); ?>
         </div>
     </div>
-    // TODO выполнить добавление комментария
+     <!-- TODO выполнить добавление комментария -->
     <form class="comments__form form" action="#" method="post">
         <div class="comments__my-avatar">
             <img class="comments__picture" src="img/userpic-medium.jpg" alt="Аватар пользователя">
