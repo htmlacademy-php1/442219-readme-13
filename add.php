@@ -36,22 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if ($type_current === 'photo') {
-        if (!empty($_FILES['file-photo']['name'])) {
-            $tmp_name = $_FILES['file-name']['tmp_name'];
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $file_type = finfo_file($finfo, $tmp_name);
-            $file_ext = get_file_extension($file_type, $image_type);
-            if ($file_ext) {
-                $filename = uniqid() . $file_ext;
-                move_uploaded_file($tmp_name, 'uploads/' . $filename);
-                $new_post['photo-url'] = $filename;
-            } else {
-                $errors['file-photo'] = 'Загрузите изображение в формате JPEG, PNG или GIF';
-            }
-        } elseif (empty($new_post['photo-url'])) {
-            $errors['photo-url'] = 'Загрузите фото или укажите ссылку на фото из интернета';
+    if (!empty($_FILES['file-photo']['name'])) {
+        $tmp_name = $_FILES['file-name']['tmp_name'];
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
+        $file_ext = get_file_extension($file_type, $image_type);
+        if ($file_ext) {
+            $filename = uniqid() . $file_ext;
+            move_uploaded_file($tmp_name, 'uploads/' . $filename);
+            $new_post['photo-url'] = $filename;
+        } else {
+            $errors['file-photo'] = 'Загрузите изображение в формате JPEG, PNG или GIF';
         }
+    } elseif (empty($new_post['photo-url'])) {
+        $errors['photo-url'] = 'Загрузите фото или укажите ссылку на фото из интернета';
     }
 
     $errors = array_filter($errors);

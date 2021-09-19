@@ -40,6 +40,13 @@
         </ul>
     </footer>
     <div class="comments">
-    <?= include_template('profile-post-commit.php', ['user_profile' => $user_profile,'post' => $post, 'is_show_comments' => $is_show_comments]); ?>
+        <div class="comments__list-wrapper">
+            <a class="comments__button button" href="profile.php?user_id=<?= $user['id']; ?>&show_comment=true">Показать комментарии</a>
+            <?= include_template('profile-post-comments.php', ['user' => $user,
+            'post' => $post,
+            'comments' => $comments,
+            'is_show_comments' => $is_show_comments,
+            ]); ?>
+        </div>
     </div>
 </article>

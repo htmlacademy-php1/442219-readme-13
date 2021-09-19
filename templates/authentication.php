@@ -22,7 +22,7 @@
             <form class="authorization__form form" action="#" method="post">
                 <div class="authorization__input-wrapper form__input-wrapper">
                     <div class="form__input-section <?= isset($errors['email']) ? 'form__input-section--error' : ''; ?>">
-                        <input class="authorization__input authorization__input--email form__input" type="email" name="email" placeholder="Email" value="<?= (!empty($aut_user['email'])) ? $aut_user['email'] : ''; ?>">
+                        <input class="authorization__input authorization__input--email form__input" type="email" name="email" placeholder="Email" value="<?= (!empty($aut_user['email'])) ? htmlspecialchars($aut_user['email']) : ''; ?>">
                         <svg class="form__input-icon" width="19" height="18">
                             <use xlink:href="#icon-input-user"></use>
                         </svg>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="authorization__input-wrapper form__input-wrapper">
                     <div class="form__input-section <?= isset($errors['password']) ? 'form__input-section--error' : ''; ?>">
-                        <input class="authorization__input authorization__input--password form__input" type="password" name="password" placeholder="Пароль" value="<?= (!empty($aut_user['password'])) ? $aut_user['password'] : ''; ?>">
+                        <input class="authorization__input authorization__input--password form__input" type="password" name="password" placeholder="Пароль" value="<?= (!empty($aut_user['password'])) ? htmlspecialchars($aut_user['password']) : ''; ?>">
                         <svg class="form__input-icon" width="16" height="20">
                             <use xlink:href="#icon-input-password"></use>
                         </svg>

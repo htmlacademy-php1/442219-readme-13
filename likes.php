@@ -14,21 +14,23 @@ $link_ref = get_path_referer();
 $post_id = filter_input(INPUT_GET, 'post_id');
 
 $post = get_posts_by_index($link, $post_id);
-
 if (!$post) {
     header("Location: /$link_ref");
     exit;
 }
 
-$is_post_likes = !empty(get_like_by_post($link, $post['post_id'], $current_user['id']));
+$temp = get_like_by_post($link, $post['post_id'], $current_user['id']);
+
+$is_post_likes = !empty($temp);
 
 if ($is_post_likes) {
+    del_like_post($link, $current_user['id'], $post['post_id']);
     header("Location: /$link_ref");
     exit;
 }
 
 if (!$is_post_likes) {
-    add_like_post($link, $current_user['user_id'], $post['post_id']);
+    add_like_post($link, $current_user['id'], $post['post_id']);
     header("Location: /$link_ref");
     exit;
 }

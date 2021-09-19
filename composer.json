@@ -1,0 +1,18 @@
+{
+    "name": "igor/readme",
+    "description": "Micro blogging",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Igor\\Readme\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Igor Vlashchenko",
+            "email": "iupgrader@mail.ru"
+        }
+    ],
+    "require": {}
+}

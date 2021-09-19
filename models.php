@@ -60,7 +60,7 @@ function get_posts_by_type($connect, $type_id)
 function get_posts_by_index($connect, $post_id)
 {
     $sql = "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, posts.img_url, "
-    . "posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, types.alias, users.avatar_url "
+    . "posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, users.registered_at, types.alias, users.avatar_url "
     . "FROM posts "
     . "JOIN users ON posts.user_id = users.id "
     . "JOIN types ON posts.type_id = types.id "
@@ -367,7 +367,7 @@ function add_new_subscriber($connect, $author_id, $subscriber_id)
  */
 function get_id_subscriber_by_user($connect, $author_id, $subscriber_id)
 {
-    $sql = "SELECT * FROM subscriptions "
+    $sql = "SELECT subscriptions.author_id FROM subscriptions "
     . "WHERE subscriptions.author_id = ? AND subscriptions.subscriber_id = ?;";
 
     return db_execute_stmt_assoc($connect, $sql, [$author_id, $subscriber_id]);
@@ -410,7 +410,7 @@ function get_path_referer()
  */
 function get_like_by_post($connect, $post_id, $user_id)
 {
-    $sql = "SELECT * FROM likes "
+    $sql = "SELECT likes.user_id FROM likes "
     . "WHERE likes.post_id = ? AND likes.user_id = ?;";
 
     return db_execute_stmt_assoc($connect, $sql, [$post_id, $user_id]);
@@ -429,6 +429,59 @@ function add_like_post($connect, $user_id, $post_id)
     $sql = "INSERT INTO likes (user_id, post_id) "
     . "VALUES (?, ?);";
     $stmt = db_get_prepare_stmt($connect, $sql, [$user_id, $post_id]);
+
+    return mysqli_stmt_execute($stmt);
+}
+
+/**
+ * Удаляем лайк поста
+ * @param object $connect Текущее соединение с сервером MySQL
+ * @param string $user_id ID пользователя
+ * @param string $post_id ID поста
+ *
+ * @return bool Успешное выполнение
+ */
+function del_like_post($connect, $user_id, $post_id)
+{
+    $sql = "DELETE FROM likes "
+    . "WHERE likes.user_id = ? AND likes.post_id = ?;";
+    $stmt = db_get_prepare_stmt($connect, $sql, [$user_id, $post_id]);
+
+    return mysqli_stmt_execute($stmt);
+}
+
+/**
+ * Получает комментарии к посту
+ * @param object $connect Текущее соединение с сервером MySQL
+ * @param string $post_id ID поста
+ *
+ * @return array Информация о комментарии к посту
+ */
+function get_comments_post($connect, $post_id)
+{
+    $sql = "SELECT comments.id, created_at, content, author_id, post_id, users.user_name, users.avatar_url "
+    . "FROM readme.comments "
+    . "JOIN users ON users.id = comments.author_id "
+    . "WHERE comments.post_id = ?;";
+
+    return db_execute_stmt_all($connect, $sql, [$post_id]);
+}
+
+/**
+ * Добавляет комментарий к посту
+ * @param object $connect Текущее соединение с сервером MySQL
+ * @param string $content Текст комментария
+ * @param string $user_id ID пользователя
+ * @param string $post_id ID поста
+ *
+ * @return bool Успешное выполнение
+ */
+function add_comment($connect, $content, $user_id, $post_id)
+{
+    $sql = "INSERT INTO comments (created_at, content, author_id, post_id) "
+    . "VALUES (NOW(), ?, ?, ?)";
+
+    $stmt = db_get_prepare_stmt($connect, $sql, [$content, $user_id, $post_id]);
 
     return mysqli_stmt_execute($stmt);
 }
