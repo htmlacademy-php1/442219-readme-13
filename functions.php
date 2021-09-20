@@ -249,35 +249,6 @@ function extract_youtube_id($youtube_url)
 }
 
 /**
- * Генерирует случайную дату взависимости от индекса постта
- * @param $index Индекс поста
- *
- * @return false|string
- */
-function generate_random_date($index)
-{
-    $deltas = [['minutes' => 59], ['hours' => 23], ['days' => 6], ['weeks' => 4], ['months' => 11]];
-    $dcnt = count($deltas);
-
-    if ($index < 0) {
-        $index = 0;
-    }
-
-    if ($index >= $dcnt) {
-        $index = $dcnt - 1;
-    }
-
-    $delta = $deltas[$index];
-    $timeval = rand(1, current($delta));
-    $timename = key($delta);
-
-    $ts = strtotime("$timeval $timename ago");
-    $dt = date('Y-m-d H:i:s', $ts);
-
-    return $dt;
-}
-
-/**
  * Отображает шаблон
  * @param string $content_header HTML секции header шаблона layout.php
  * @param string $content HTML секции main шаблона layout.php
@@ -319,17 +290,6 @@ function get_arr_from_mysql($connect_mysql, $sql_query)
     }
 
     return $result;
-}
-
-/**
- * Преобразует дату по формату
- * @param string $date Исходная дата
- * @param string $format Требуемый формат записи даты
- */
-function format_date($date, $format)
-{
-
-    return date($format, strtotime($date));
 }
 
 /**
@@ -438,7 +398,7 @@ function get_file_extension($file_type, $arr_type)
  *
  * @return string Значение из массива $_GET
  */
-function get_value_get($name)
+function get_value_get($name) // TODO Удалить излишнюю функцию после замены в коде
 {
     return htmlspecialchars($_GET[$name] ?? '');
 }

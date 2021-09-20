@@ -56,8 +56,13 @@
         </div>
         <div class="popular__posts">
             <?php foreach ($posts as $index => $post): ?>
-                <?= include_template('popular-post.php', ['index' => $index, 'post' => $post]); ?>
+                <?= include_template('popular-post.php', ['post' => $post]); ?>
             <?php endforeach; ?>
+        </div>
+        <!-- TODO Сделать пагинацию -->
+        <div class="popular__page-links">
+            <a class="popular__page-link popular__page-link--prev button button--gray" href="#">Предыдущая страница</a>
+            <a class="popular__page-link popular__page-link--next button button--gray" href="#">Следующая страница</a>
         </div>
     </div>
 </section>

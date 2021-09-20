@@ -14,7 +14,7 @@ $layout_header = include_template('main-header.php', [
     'is_popular' => $is_popular,
 ]);
 
-$types = get_content_types($link);
+$types = get_arr_from_mysql($link, 'SELECT id, title, alias FROM types;');
 
 if (!$types) {
     show_error($layout_header, 'Ошибка чтения БД: ' . mysqli_error($link), 'readme: популярные записи');
@@ -27,7 +27,7 @@ if ($type_id) {
 } else {
     $posts = get_popular_posts_default($link);
 };
-
+// TODO Сделать пагинацию
 if (!$posts) {
     show_error($layout_header, 'Ошибка чтения БД: ' . mysqli_error($link),'readme: популярные записи');
 };
