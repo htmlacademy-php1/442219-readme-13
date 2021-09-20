@@ -12,13 +12,26 @@ function get_content_types($connect) // TODO Удалить излишнюю ф�
 
 /**
  * Получает массив популярных постов для дефолтных состояний сортировки и фильтра типов постов
- * @param string $limit_posts Максимальное количество постов показываемы на странице
+ * @param int $limit_posts Максимальное количество постов показываемы на странице
  * @param object $connect Текущее соединение с сервером MySQL
+ * @param string $sort Вид сортировки постов показываемы на странице
  *
  * @return array Ассоциативный массив популярных постов
  */
-function get_popular_posts_default($connect, $limit_posts = '9')
+function get_popular_posts_default($connect, $sort_post, $offset = 0, $limit_posts = MAX_POSTS)
 {
+    switch ($sort_post) {
+        case 'popular':
+            $sort = 'posts.view_counter';
+            break;
+        case 'like':
+            $sort = 'COUNT(likes.id)';
+            break;
+        case 'date':
+            //
+            break;
+    }
+
     $sql = "SELECT COUNT(likes.id) likes, COUNT(comments.id) comments, posts.view_counter AS views, posts.id AS post_id, posts.title, posts.text_content, "
     . "posts.created_at, posts.author_quote, posts.img_url, posts.video_url, posts.site_url, posts.user_id, user_name AS author, types.alias, users.avatar_url "
     . "FROM posts "
@@ -26,7 +39,7 @@ function get_popular_posts_default($connect, $limit_posts = '9')
     . "JOIN types ON posts.type_id = types.id "
     . "LEFT OUTER JOIN likes ON posts.id = likes.post_id "
     . "LEFT OUTER JOIN comments ON posts.id = comments.post_id "
-    . "GROUP BY posts.id ORDER BY posts.view_counter DESC LIMIT $limit_posts;";
+    . "GROUP BY posts.id ORDER BY $sort DESC LIMIT $limit_posts OFFSET $offset;";
 
     return get_arr_from_mysql($connect, $sql);
 }
@@ -38,7 +51,7 @@ function get_popular_posts_default($connect, $limit_posts = '9')
  *
  * @return array Массив постов выбранных по типу
  */
-function get_posts_by_type($connect, $type_id)
+function get_posts_by_type($connect, $type_id, $offset = 0, $limit_posts = MAX_POSTS)
 {
     $sql = "SELECT COUNT(likes.id) likes, COUNT(comments.id) comments, posts.id AS post_id, posts.created_at, posts.title, posts.text_content, posts.author_quote, "
     . "posts.img_url, posts.video_url, posts.site_url, posts.user_id, user_name AS author, types.alias, users.avatar_url "
@@ -47,7 +60,7 @@ function get_posts_by_type($connect, $type_id)
     . "JOIN types ON posts.type_id = types.id "
     . "LEFT OUTER JOIN likes ON posts.id = likes.post_id "
     . "LEFT OUTER JOIN comments ON posts.id = comments.post_id "
-    . "WHERE types.id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;";
+    . "WHERE types.id = ? GROUP BY posts.id ORDER BY posts.view_counter DESC LIMIT $limit_posts OFFSET $offset;";
 
     return db_execute_stmt_all($connect, $sql, [$type_id]);
 }
@@ -61,12 +74,13 @@ function get_posts_by_type($connect, $type_id)
  */
 function get_posts_by_index($connect, $post_id)
 {
-    $sql = "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.created_at, posts.title, posts.text_content, posts.author_quote, posts.img_url, "
+    $sql = "SELECT COUNT(likes.id) likes, COUNT(comments.id) comments, posts.id AS post_id, posts.created_at, posts.title, posts.text_content, posts.author_quote, posts.img_url, "
     . "posts.video_url, posts.site_url, posts.view_counter, users.id AS id_user, user_name AS author, users.registered_at, types.alias, users.avatar_url "
     . "FROM posts "
     . "JOIN users ON posts.user_id = users.id "
     . "JOIN types ON posts.type_id = types.id "
     . "LEFT OUTER JOIN likes ON posts.id = likes.post_id "
+    . "LEFT OUTER JOIN comments ON posts.id = comments.post_id "
     . "WHERE posts.id = ? GROUP BY posts.id;";
 
     return db_execute_stmt_assoc($connect, $sql, [$post_id]);

@@ -19,18 +19,24 @@ if (!$post) {
     exit;
 }
 
-$temp = get_like_by_post($link, $post['post_id'], $current_user['id']);
-
-$is_post_likes = !empty($temp);
+$is_post_likes = !empty(get_like_by_post($link, $post['post_id'], $current_user['id']));
 
 if ($is_post_likes) {
-    del_like_post($link, $current_user['id'], $post['post_id']);
+    $like_del = del_like_post($link, $current_user['id'], $post['post_id']);
+    if (!$like_del) {
+        show_error($layout_header, 'Ошибка записи в БД: ' . mysqli_error($link), 'readme');
+    }
+
     header("Location: /$link_ref");
     exit;
 }
 
 if (!$is_post_likes) {
-    add_like_post($link, $current_user['id'], $post['post_id']);
+    $like_add = add_like_post($link, $current_user['id'], $post['post_id']);
+    if (!$like_add) {
+        show_error($layout_header, 'Ошибка записи в БД: ' . mysqli_error($link), 'readme');
+    }
+
     header("Location: /$link_ref");
     exit;
 }

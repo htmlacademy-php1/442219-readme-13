@@ -8,7 +8,7 @@
                 <b class="popular__sorting-caption sorting__caption">Сортировка:</b>
                 <ul class="popular__sorting-list sorting__list">
                     <li class="sorting__item sorting__item--popular">
-                        <a class="sorting__link sorting__link--active" href="#">
+                        <a class="sorting__link sorting__link--active" href="popular.php?page=1&sort=popular">
                             <span>Популярность</span>
                             <svg class="sorting__icon" width="10" height="12">
                                 <use xlink:href="#icon-sort"></use>
@@ -16,7 +16,7 @@
                         </a>
                     </li>
                     <li class="sorting__item">
-                        <a class="sorting__link" href="#">
+                        <a class="sorting__link" href="popular.php?page=1&sort=like">
                             <span>Лайки</span>
                             <svg class="sorting__icon" width="10" height="12">
                                 <use xlink:href="#icon-sort"></use>
@@ -24,7 +24,7 @@
                         </a>
                     </li>
                     <li class="sorting__item">
-                        <a class="sorting__link" href="#">
+                        <a class="sorting__link" href="popular.php?page=1&sort=date">
                             <span>Дата</span>
                             <svg class="sorting__icon" width="10" height="12">
                                 <use xlink:href="#icon-sort"></use>
@@ -37,13 +37,13 @@
                 <b class="popular__filters-caption filters__caption">Тип контента:</b>
                 <ul class="popular__filters-list filters__list">
                     <li class="popular__filters-item popular__filters-item--all filters__item filters__item--all">
-                        <a class="filters__button filters__button--ellipse filters__button--all <?php if (!$type_id) : ?>filters__button--active<?php endif; ?>" href="popular.php?type_id=0">
+                        <a class="filters__button filters__button--ellipse filters__button--all <?php if (!$type_id) : ?>filters__button--active<?php endif; ?>" href="popular.php?type_id=0&sort=popular">
                             <span>Все</span>
                         </a>
                     </li>
                     <?php foreach ($types as $type): ?>
                         <li class="popular__filters-item filters__item">
-                            <a class="filters__button filters__button--<?= $type['alias'] ?> button <?php if ($type_id === $type['id']) : ?>filters__button--active<?php endif; ?>" href="popular.php?type_id=<?= $type['id']; ?>">
+                            <a class="filters__button filters__button--<?= $type['alias'] ?> button <?php if ($type_id === $type['id']) : ?>filters__button--active<?php endif; ?>" href="popular.php?type_id=<?= $type['id']; ?>&sort=popular">
                                 <span class="visually-hidden"><?= $type['title']; ?></span>
                                 <svg class="filters__icon" width="22" height="18">
                                     <use xlink:href="#icon-filter-<?= $type['alias']; ?>"></use>
@@ -59,10 +59,11 @@
                 <?= include_template('popular-post.php', ['post' => $post]); ?>
             <?php endforeach; ?>
         </div>
-        <!-- TODO Сделать пагинацию -->
+        <?php if ($pages_count > 1) : ?>
         <div class="popular__page-links">
-            <a class="popular__page-link popular__page-link--prev button button--gray" href="#">Предыдущая страница</a>
-            <a class="popular__page-link popular__page-link--next button button--gray" href="#">Следующая страница</a>
+            <a class="popular__page-link popular__page-link--prev button button--gray" <?php if ($page_prev_url) : ?>href="<?= $page_prev_url; ?>"<?php endif; ?>>Предыдущая страница</a>
+            <a class="popular__page-link popular__page-link--next button button--gray" <?php if ($page_next_url) : ?>href="<?= $page_next_url; ?>"<?php endif; ?>>Следующая страница</a>
         </div>
+        <?php endif; ?>
     </div>
 </section>
