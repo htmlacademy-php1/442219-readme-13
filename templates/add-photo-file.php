@@ -6,6 +6,7 @@
                 <span>Перетащите фото сюда</span>
             </div>
         </div>
+        <!-- TODO Разобраться с загрузкой файлов -->
         <button class="adding-post__input-file-button form__input-file-button form__input-file-button--photo button" type="button">
             <span>Выбрать фото</span>
             <svg class="adding-post__attach-icon form__attach-icon" width="10" height="20">

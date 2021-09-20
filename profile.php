@@ -20,27 +20,36 @@ if (!$user_id) {
     show_error($layout_header, 'Запрошенная страница не найдена на сервере: ' . '404', 'readme: профиль пользователя');
 }
 
-$user_profile = get_profile_user_by_index($link, $user_id);
-if (!$user_profile) {
+$user = get_profile_user_by_index($link, $user_id);
+if (!$user) {
     show_error($layout_header, 'Запрошенная страница не найдена на сервере: ' . '404', 'readme: профиль пользователя');
 }
 
-$is_subscribe = false; // текущий пользователь не подписан на автора поста
+$is_show_comments = false; // TODO по умолчанию не показывать комментарии к посту
+$is_not_you = $user['id'] !== $current_user['id']; // это не вы сами :)))
 
-// запрос постов по ID пользователя
-$user_posts = [];
+// посты по ID пользователя
+$user_posts = get_posts_by_user($link, $user_id);
 
-// запрос количества подписчиков
-$user_subscribe = get_subscribers_by_user($link, $user_id);
+// количество подписчиков
+$user_subscribe = get_subscribers_by_user($link, $user_id)['count_sub'];
 
 // количество публикаций
-$user_publications = get_posting_by_user($link, $user_id);
+$user_publications = get_posting_by_user($link, $user_id)['count_posts'];
+
+$is_subscribe = !empty(get_id_subscriber_by_user($link, $user['id'], $current_user['id']));
+$comments = get_comments_post($link, $post['post_id']);
 
 $layout_content = include_template('profile-main.php', [
-    'user_profile' => $user_profile,
+    'user' => $user,
     'user_posts' => $user_posts,
     'user_subscribe' => $user_subscribe,
-    '$user_publications' => $user_publications,
+    'user_publications' => $user_publications,
+    'current_user' => $current_user,
+    'is_subscribe' => $is_subscribe,
+    'is_not_you' => $is_not_you,
+    'comments' => $comments,
+    'is_show_comments' => $is_show_comments,
 ]);
 
 show_layout($layout_header, $layout_content, 'readme: профиль пользователя');

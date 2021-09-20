@@ -55,18 +55,17 @@
         <div class="post__author">
             <a class="post__author-link" href="profile.php?user_id=<?= $post['user_id']; ?>" title="Автор">
                 <div class="post__avatar-wrapper">
-                    <img class="post__author-avatar" src="img/<?= $post['avatar_url']; ?>" alt="Аватар пользователя">
+                    <img class="post__author-avatar" src="<?= $post['avatar_url']; ?>" alt="Аватар пользователя">
                 </div>
                 <div class="post__info">
                     <b class="post__author-name"><?= htmlspecialchars($post['author']); ?></b>
-                    <?php $public_date = generate_random_date($index); ?>
-                    <time class="post__time" datetime="<?= $public_date ?>" title="<?= format_date($public_date, DATE_TITLE); ?>"><?= get_diff_time_public_post($public_date); ?></time>
+                    <time class="post__time" datetime="<?= $post['created_at'] ?>" title="<?= date(DATE_TITLE, strtotime($post['created_at'])); ?>"><?= get_diff_time_public_post($post['created_at']); ?></time>
                 </div>
             </a>
         </div>
         <div class="post__indicators">
             <div class="post__buttons">
-                <a class="post__indicator post__indicator--likes button" href="#" title="Лайк">
+                <a class="post__indicator post__indicator--likes button" href="likes.php?post_id=<?= $post['post_id']; ?>" title="Лайк">
                     <svg class="post__indicator-icon" width="20" height="17">
                         <use xlink:href="#icon-heart"></use>
                     </svg>
@@ -80,7 +79,7 @@
                     <svg class="post__indicator-icon" width="19" height="17">
                         <use xlink:href="#icon-comment"></use>
                     </svg>
-                    <span>0</span>
+                    <span><?= $post['comments']; ?></span>
                     <span class="visually-hidden">количество комментариев</span>
                 </a>
             </div>

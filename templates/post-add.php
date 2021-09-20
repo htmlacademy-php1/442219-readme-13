@@ -28,7 +28,7 @@
                                     <div class="adding-post__input-wrapper form__input-wrapper">
                                         <label class="adding-post__label form__label" for="photo-heading">Заголовок <span class="form__input-required">*</span></label>
                                         <div class="form__input-section <?= isset($errors['heading']) ? 'form__input-section--error' : ''; ?>">
-                                            <input class="adding-post__input form__input" id="photo-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= (!empty($new_post['heading'])) ? $new_post['heading'] : ''; ?>">
+                                            <input class="adding-post__input form__input" id="photo-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= (!empty($new_post['heading'])) ? htmlspecialchars($new_post['heading']) : ''; ?>">
                                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                                 <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -40,7 +40,7 @@
                                     <div class="adding-post__input-wrapper form__input-wrapper">
                                         <label class="adding-post__label form__label" for="photo-tags">Теги</label>
                                         <div class="form__input-section <?= isset($errors['hashtags']) ? 'form__input-section--error' : ''; ?>">
-                                            <input class="adding-post__input form__input" id="photo-tags" type="text" name="hashtags" placeholder="Введите теги" value="<?= (!empty($new_post['hashtags'])) ? $new_post['hashtags'] : ''; ?>">
+                                            <input class="adding-post__input form__input" id="photo-tags" type="text" name="hashtags" placeholder="Введите теги" value="<?= (!empty($new_post['hashtags'])) ? htmlspecialchars($new_post['hashtags']) : ''; ?>">
                                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                                 <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -56,6 +56,7 @@
                             <?= include_template('add-photo-file.php'); ?>
                             <div class="adding-post__buttons">
                                 <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
+                                <!-- TODO Изменить ссылку -->
                                 <a class="adding-post__close" href="index.php">Закрыть</a>
                             </div>
                         </form>
@@ -69,7 +70,7 @@
                                     <div class="adding-post__input-wrapper form__input-wrapper">
                                         <label class="adding-post__label form__label" for="video-heading">Заголовок <span class="form__input-required">*</span></label>
                                         <div class="form__input-section <?= isset($errors['heading']) ? 'form__input-section--error' : ''; ?>">
-                                            <input class="adding-post__input form__input" id="video-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= (!empty($new_post['heading'])) ? $new_post['heading'] : ''; ?>">
+                                            <input class="adding-post__input form__input" id="video-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= (!empty($new_post['heading'])) ? htmlspecialchars($new_post['heading']) : ''; ?>">
                                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                                 <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -81,7 +82,7 @@
                                     <div class="adding-post__input-wrapper form__input-wrapper">
                                         <label class="adding-post__label form__label" for="video-tags">Теги</label>
                                         <div class="form__input-section <?= isset($errors['hashtags']) ? 'form__input-section--error' : ''; ?>">
-                                            <input class="adding-post__input form__input" id="video-tags" type="text" name="hashtags" placeholder="Введите теги" value="<?= (!empty($new_post['hashtags'])) ? $new_post['hashtags'] : ''; ?>">
+                                            <input class="adding-post__input form__input" id="video-tags" type="text" name="hashtags" placeholder="Введите теги" value="<?= (!empty($new_post['hashtags'])) ? htmlspecialchars($new_post['hashtags']) : ''; ?>">
                                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                                 <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -94,7 +95,6 @@
                                     <?= include_template('add-errors-block.php', ['errors'=> $errors, 'errors_heading' => $errors_heading]); ?>
                                 <?php endif; ?>
                             </div>
-
                             <div class="adding-post__buttons">
                                 <button class="adding-post__submit button button--main" type="submit">Опубликовать</button>
                                 <a class="adding-post__close" href="index.php">Закрыть</a>
@@ -110,7 +110,7 @@
                                     <div class="adding-post__input-wrapper form__input-wrapper">
                                         <label class="adding-post__label form__label" for="text-heading">Заголовок <span class="form__input-required">*</span></label>
                                         <div class="form__input-section <?= isset($errors['heading']) ? 'form__input-section--error' : ''; ?>">
-                                            <input class="adding-post__input form__input" id="text-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= (!empty($new_post['heading'])) ? $new_post['heading'] : ''; ?>">
+                                            <input class="adding-post__input form__input" id="text-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= (!empty($new_post['heading'])) ? htmlspecialchars($new_post['heading']) : ''; ?>">
                                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                                 <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -118,13 +118,11 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <?= include_template('add-text.php', ['errors'=> $errors, 'new_post' => $new_post]); ?>
-
                                     <div class="adding-post__input-wrapper form__input-wrapper">
                                         <label class="adding-post__label form__label" for="post-tags">Теги</label>
                                         <div class="form__input-section <?= isset($errors['hashtags']) ? 'form__input-section--error' : ''; ?>">
-                                            <input class="adding-post__input form__input" id="post-tags" type="text" name="hashtags" placeholder="Введите теги" value="<?= (!empty($new_post['hashtags'])) ? $new_post['hashtags'] : ''; ?>">
+                                            <input class="adding-post__input form__input" id="post-tags" type="text" name="hashtags" placeholder="Введите теги" value="<?= (!empty($new_post['hashtags'])) ? htmlspecialchars($new_post['hashtags']) : ''; ?>">
                                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                             <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -152,7 +150,7 @@
                                     <div class="adding-post__input-wrapper form__input-wrapper">
                                         <label class="adding-post__label form__label" for="quote-heading">Заголовок <span class="form__input-required">*</span></label>
                                         <div class="form__input-section <?= isset($errors['heading']) ? 'form__input-section--error' : ''; ?>">
-                                            <input class="adding-post__input form__input" id="quote-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= (!empty($new_post['heading'])) ? $new_post['heading'] : ''; ?>">
+                                            <input class="adding-post__input form__input" id="quote-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= (!empty($new_post['heading'])) ? htmlspecialchars($new_post['heading']) : ''; ?>">
                                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                                 <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -160,13 +158,11 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <?= include_template('add-quote.php', ['errors'=> $errors, 'new_post' => $new_post]); ?>
-
                                     <div class="adding-post__input-wrapper form__input-wrapper">
                                     <label class="adding-post__label form__label" for="cite-tags">Теги</label>
                                         <div class="form__input-section <?= isset($errors['hashtags']) ? 'form__input-section--error' : ''; ?>">
-                                            <input class="adding-post__input form__input" id="cite-tags" type="text" name="hashtags" placeholder="Введите теги" value="<?= (!empty($new_post['hashtags'])) ? $new_post['hashtags'] : ''; ?>">
+                                            <input class="adding-post__input form__input" id="cite-tags" type="text" name="hashtags" placeholder="Введите теги" value="<?= (!empty($new_post['hashtags'])) ? htmlspecialchars($new_post['hashtags']) : ''; ?>">
                                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                                 <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -194,7 +190,7 @@
                                     <div class="adding-post__input-wrapper form__input-wrapper">
                                         <label class="adding-post__label form__label" for="link-heading">Заголовок <span class="form__input-required">*</span></label>
                                         <div class="form__input-section <?= isset($errors['heading']) ? 'form__input-section--error' : ''; ?>">
-                                            <input class="adding-post__input form__input" id="link-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= (!empty($new_post['heading'])) ? $new_post['heading'] : ''; ?>">
+                                            <input class="adding-post__input form__input" id="link-heading" type="text" name="heading" placeholder="Введите заголовок" value="<?= (!empty($new_post['heading'])) ? htmlspecialchars($new_post['heading']) : ''; ?>">
                                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                                 <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -202,13 +198,11 @@
                                             </div>
                                         </div>
                                     </div>
-
                                     <?= include_template('add-link.php', ['errors'=> $errors, 'new_post' => $new_post]); ?>
-
                                     <div class="adding-post__input-wrapper form__input-wrapper">
                                         <label class="adding-post__label form__label" for="link-tags">Теги</label>
                                         <div class="form__input-section <?= isset($errors['hashtags']) ? 'form__input-section--error' : ''; ?>">
-                                            <input class="adding-post__input form__input" id="link-tags" type="link-tags" name="hashtags" placeholder="Введите теги" value="<?= (!empty($new_post['hashtags'])) ? $new_post['hashtags'] : ''; ?>">
+                                            <input class="adding-post__input form__input" id="link-tags" type="link-tags" name="hashtags" placeholder="Введите теги" value="<?= (!empty($new_post['hashtags'])) ? htmlspecialchars($new_post['hashtags']) : ''; ?>">
                                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                                             <div class="form__error-text">
                                                 <h3 class="form__error-title">Заголовок сообщения</h3>

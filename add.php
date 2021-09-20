@@ -10,7 +10,7 @@ is_not_session();
 
 $current_user = get_user_by_id($link, $_SESSION['user_id']);
 $is_add = is_current_page('add.php');
-$link_ref = $_SERVER['HTTP_REFERER'];
+$link_ref = get_path_referer();
 
 $types = get_content_types($link);
 $type_current = 'photo';
@@ -36,22 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    if ($type_current === 'photo') {
-        if (!empty($_FILES['file-photo']['name'])) {
-            $tmp_name = $_FILES['file-name']['tmp_name'];
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            $file_type = finfo_file($finfo, $tmp_name);
-            $file_ext = get_file_extension($file_type, $image_type);
-            if ($file_ext) {
-                $filename = uniqid() . $file_ext;
-                move_uploaded_file($tmp_name, 'uploads/' . $filename);
-                $new_post['photo-url'] = $filename;
-            } else {
-                $errors['file-photo'] = 'Загрузите изображение в формате JPEG, PNG или GIF';
-            }
-        } elseif (empty($new_post['photo-url'])) {
-            $errors['photo-url'] = 'Загрузите фото или укажите ссылку на фото из интернета';
+    if (!empty($_FILES['file-photo']['name'])) {
+        $tmp_name = $_FILES['file-name']['tmp_name'];
+        $finfo = finfo_open(FILEINFO_MIME_TYPE);
+        $file_type = finfo_file($finfo, $tmp_name);
+        $file_ext = get_file_extension($file_type, $image_type);
+        if ($file_ext) {
+            $filename = uniqid() . $file_ext;
+            move_uploaded_file($tmp_name, 'uploads/' . $filename);
+            $new_post['photo-url'] = $filename;
+        } else {
+            $errors['file-photo'] = 'Загрузите изображение в формате JPEG, PNG или GIF';
         }
+    } elseif (empty($new_post['photo-url'])) {
+        $errors['photo-url'] = 'Загрузите фото или укажите ссылку на фото из интернета';
     }
 
     $errors = array_filter($errors);
@@ -65,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'new_post' => $new_post,
         ]);
     } else {
+        // TODO Переписать: выбор переменной и в конце одна функция
         switch ($type_current) {
             case 'photo':
                 $new_post_bd = add_post_photo($link, $new_post['heading'], $new_post['photo-url'], 1);
