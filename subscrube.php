@@ -31,5 +31,3 @@ if ($is_subscribe) {
     header("Location: /$link_ref");
     exit;
 }
-
-// TODO добавить отправку уведомлений

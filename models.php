@@ -1,16 +1,5 @@
 <?php
 /**
- * Получает массив типов контента постов
- * @param object $connect Текущее соединение с сервером MySQL
- *
- * @return array Ассоциативный массив типов постов
- */
-function get_content_types($connect) // TODO Удалить излишнюю функцию после замены в коде
-{
-    return get_arr_from_mysql($connect, 'SELECT id, title, alias FROM types;');
-}
-
-/**
  * Получает массив популярных постов для дефолтных состояний сортировки и фильтра типов постов
  * @param int $limit_posts Максимальное количество постов показываемы на странице
  * @param object $connect Текущее соединение с сервером MySQL
@@ -123,6 +112,14 @@ function get_posts_by_user($connect, $author_id)
     return db_execute_stmt_all($connect, $sql, [$author_id]);
 }
 
+/**
+ * Получает массив публикаций пользователя определенного типа
+ * @param string $author_id Индекс пользователя
+ * @param string $type_id Индекс типа контента
+ * @param object $connect Текущее соединение с сервером MySQL
+ *
+ * @return array Массив постов пользователя
+ */
 function get_posts_by_user_type($connect, $author_id, $type_id)
 {
     $sql = "SELECT COUNT(likes.id) likes, COUNT(comments.id) comments, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, "
@@ -341,18 +338,6 @@ function get_likes_by_posts($connect, $post_id)
     . "WHERE post_id = ?;";
 
     return db_execute_stmt_assoc($connect, $sql, [$post_id]);
-}
-
-/**
- * Получает посты с результами поиска по хэштегам
- * @param object $connect Текущее соединение с сервером MySQL
- * @param string $hashtag Искомый тег
- *
- * @return array Посты с найденным тегом в хронологическом порядке начиная с самых новых
- */
-function get_posts_by_hashtags($link, $hashtag)
-{
-// TODO Доделать функцию
 }
 
 /**

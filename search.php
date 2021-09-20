@@ -11,7 +11,7 @@ is_not_session();
 $current_user = get_user_by_id($link, $_SESSION['user_id']);
 $link_ref = $_SERVER['HTTP_REFERER'];
 
-$query = trim(get_value_get('search'));
+$query = htmlspecialchars(trim($_GET['search'] ?? ''));
 $posts_search = [];
 
 if ($query) {

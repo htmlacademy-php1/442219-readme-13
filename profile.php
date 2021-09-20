@@ -25,16 +25,13 @@ if (!$user) {
     show_error($layout_header, 'Запрошенная страница не найдена на сервере: ' . '404', 'readme: профиль пользователя');
 }
 
-$is_show_comments = false; // TODO по умолчанию не показывать комментарии к посту
-$is_not_you = $user['id'] !== $current_user['id']; // это не вы сами :)))
+$is_show_comments = false;
+$is_not_you = $user['id'] !== $current_user['id'];
 
-// посты по ID пользователя
 $user_posts = get_posts_by_user($link, $user_id);
 
-// количество подписчиков
 $user_subscribe = get_subscribers_by_user($link, $user_id)['count_sub'];
 
-// количество публикаций
 $user_publications = get_posting_by_user($link, $user_id)['count_posts'];
 
 $is_subscribe = !empty(get_id_subscriber_by_user($link, $user['id'], $current_user['id']));
