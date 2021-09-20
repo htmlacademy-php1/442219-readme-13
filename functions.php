@@ -393,17 +393,6 @@ function get_file_extension($file_type, $arr_type)
 }
 
 /**
- * Получает значение из массива $_GET
- * @param string $name Значение атрибута поля формы
- *
- * @return string Значение из массива $_GET
- */
-function get_value_get($name) // TODO Удалить излишнюю функцию после замены в коде
-{
-    return htmlspecialchars($_GET[$name] ?? '');
-}
-
-/**
  * Подтверждает нахождение на странице
  * @param string $page_url Путь страницы
  *

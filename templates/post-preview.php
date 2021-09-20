@@ -34,7 +34,6 @@
                                 <svg class="post__indicator-icon" width="19" height="17">
                                     <use xlink:href="#icon-repost"></use>
                                 </svg>
-                                <!-- TODO Добавить количество репостов -->
                                 <span>5</span>
                                 <span class="visually-hidden">количество репостов</span>
                             </a>
@@ -42,7 +41,6 @@
                         <span class="post__view"><?= $post['view_counter']; ?> <?= get_noun_plural_form($post['view_counter'], 'просмотр', 'просмотра', 'просмотров'); ?></span>
                     </div>
                     <ul class="post__tags">
-                        <!-- TODO Доделать отображение хэштегов -->
                         <li><a href="#">#nature</a></li>
                         <li><a href="#">#globe</a></li>
                         <li><a href="#">#photooftheday</a></li>
@@ -100,7 +98,6 @@
                         </p>
                     </div>
                     <div class="post-details__user-buttons user__buttons">
-                        <!-- TODO Изменить на ссылку -->
                         <button class="user__button user__button--subscription button button--main" type="button">Подписаться</button>
                         <a class="user__button user__button--writing button button--green" href="#">Сообщение</a>
                     </div>

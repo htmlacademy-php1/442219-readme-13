@@ -31,7 +31,6 @@
             <time class="post__time" datetime="2019-01-30T23:41">15 минут назад</time>
         </div>
         <ul class="post__tags">
-            <!-- TODO Разобраться с хэштегами -->
             <li><a href="#">#nature</a></li>
             <li><a href="#">#globe</a></li>
             <li><a href="#">#photooftheday</a></li>

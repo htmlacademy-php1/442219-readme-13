@@ -37,13 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (count($errors)) {
         header("Location: /post.php?post_id=$current_post");
         exit();
-        // $post_content = include_template('post-preview.php', [
-            // 'errors' => $errors,
-            // 'post' => $post,
-            // 'subscribers' => $subscribers,
-            // 'posting' => $posting,
-            // 'comments' => $comments,
-        // ]);
     }
 
     if (add_comment($link, trim($new_comment['comment']), $current_user['id'], $current_post)) {

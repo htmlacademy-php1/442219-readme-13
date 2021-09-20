@@ -12,7 +12,7 @@ $current_user = get_user_by_id($link, $_SESSION['user_id']);
 $is_add = is_current_page('add.php');
 $link_ref = get_path_referer();
 
-$types = get_content_types($link);
+$types = get_arr_from_mysql($link, 'SELECT id, title, alias FROM types;');
 $type_current = 'photo';
 
 $post_content = include_template('post-add.php', [
@@ -63,7 +63,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'new_post' => $new_post,
         ]);
     } else {
-        // TODO Переписать: выбор переменной и в конце одна функция
         switch ($type_current) {
             case 'photo':
                 $new_post_bd = add_post_photo($link, $new_post['heading'], $new_post['photo-url'], 1);
