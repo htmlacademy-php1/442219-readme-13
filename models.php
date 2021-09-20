@@ -111,15 +111,30 @@ function get_subscribers_by_user($connect, $author_id)
  */
 function get_posts_by_user($connect, $author_id)
 {
-    $sql = "SELECT COUNT(likes.id) likes, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, "
+    $sql = "SELECT COUNT(likes.id) likes, COUNT(comments.id) comments, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, "
     . "posts.img_url, posts.video_url, posts.site_url, posts.user_id, user_name AS author, types.alias, users.avatar_url "
     . "FROM posts "
     . "JOIN users ON posts.user_id = users.id "
     . "JOIN types ON posts.type_id = types.id "
     . "LEFT OUTER JOIN likes ON posts.id = likes.post_id "
+    . "LEFT OUTER JOIN comments ON posts.id = comments.post_id "
     . "WHERE posts.user_id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;";
 
     return db_execute_stmt_all($connect, $sql, [$author_id]);
+}
+
+function get_posts_by_user_type($connect, $author_id, $type_id)
+{
+    $sql = "SELECT COUNT(likes.id) likes, COUNT(comments.id) comments, posts.id AS post_id, posts.title, posts.text_content, posts.author_quote, "
+    . "posts.img_url, posts.video_url, posts.site_url, posts.user_id, user_name AS author, types.alias, users.avatar_url "
+    . "FROM posts "
+    . "JOIN users ON posts.user_id = users.id "
+    . "JOIN types ON posts.type_id = types.id "
+    . "LEFT OUTER JOIN likes ON posts.id = likes.post_id "
+    . "LEFT OUTER JOIN comments ON posts.id = comments.post_id "
+    . "WHERE posts.user_id = ? AND types.id = ? GROUP BY posts.id ORDER BY COUNT(likes.id) DESC;";
+
+    return db_execute_stmt_all($connect, $sql, [$author_id, $type_id]);
 }
 
 /**
