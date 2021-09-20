@@ -10,7 +10,7 @@
                     <div class="registration__input-wrapper form__input-wrapper">
                         <label class="registration__label form__label" for="registration-email">Электронная почта <span class="form__input-required">*</span></label>
                         <div class="form__input-section <?= isset($errors['email']) ? 'form__input-section--error' : ''; ?>">
-                            <input class="registration__input form__input" id="registration-email" type="email" name="email" placeholder="Укажите эл.почту" value="<?= (!empty($new_user['email'])) ? $new_user['email'] : ''; ?>">
+                            <input class="registration__input form__input" id="registration-email" type="email" name="email" placeholder="Укажите эл.почту" value="<?= (!empty($new_user['email'])) ? htmlspecialchars($new_user['email']) : ''; ?>">
                             <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                             <div class="form__error-text">
                                 <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -21,7 +21,7 @@
                 <div class="registration__input-wrapper form__input-wrapper">
                     <label class="registration__label form__label" for="registration-login">Логин <span class="form__input-required">*</span></label>
                     <div class="form__input-section <?= isset($errors['login']) ? 'form__input-section--error' : ''; ?>">
-                        <input class="registration__input form__input" id="registration-login" type="text" name="login" placeholder="Укажите логин" value="<?= (!empty($new_user['login'])) ? $new_user['login'] : ''; ?>">
+                        <input class="registration__input form__input" id="registration-login" type="text" name="login" placeholder="Укажите логин" value="<?= (!empty($new_user['login'])) ? htmlspecialchars($new_user['login']) : ''; ?>">
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -32,7 +32,7 @@
                 <div class="registration__input-wrapper form__input-wrapper">
                     <label class="registration__label form__label" for="registration-password">Пароль<span class="form__input-required">*</span></label>
                     <div class="form__input-section <?= isset($errors['password']) ? 'form__input-section--error' : ''; ?>">
-                        <input class="registration__input form__input" id="registration-password" type="password" name="password" placeholder="Придумайте пароль" value="<?= (!empty($new_user['password'])) ? $new_user['password'] : ''; ?>">
+                        <input class="registration__input form__input" id="registration-password" type="password" name="password" placeholder="Придумайте пароль" value="<?= (!empty($new_user['password'])) ? htmlspecialchars($new_user['password']) : ''; ?>">
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Заголовок сообщения</h3>
@@ -43,7 +43,7 @@
                 <div class="registration__input-wrapper form__input-wrapper">
                     <label class="registration__label form__label" for="registration-password-repeat">Повтор пароля<span class="form__input-required">*</span></label>
                     <div class="form__input-section <?= isset($errors['password-repeat']) ? 'form__input-section--error' : ''; ?>">
-                        <input class="registration__input form__input" id="registration-password-repeat" type="password" name="password-repeat" placeholder="Повторите пароль" value="<?= (!empty($new_user['password-repeat'])) ? $new_user['password-repeat'] : ''; ?>">
+                        <input class="registration__input form__input" id="registration-password-repeat" type="password" name="password-repeat" placeholder="Повторите пароль" value="<?= (!empty($new_user['password-repeat'])) ? htmlspecialchars($new_user['password-repeat']) : ''; ?>">
                         <button class="form__error-button button" type="button">!<span class="visually-hidden">Информация об ошибке</span></button>
                         <div class="form__error-text">
                             <h3 class="form__error-title">Заголовок сообщения</h3>

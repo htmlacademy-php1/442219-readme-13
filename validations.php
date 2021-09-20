@@ -29,6 +29,9 @@ $form_required_fields = [
         'password',
         'password-repeat',
     ],
+    'comment' => [
+        'comment',
+    ]
 ];
 
 /**
@@ -71,6 +74,9 @@ $form_all_fields = [
         'email' => FILTER_DEFAULT,
         'password' => FILTER_DEFAULT,
     ],
+    'comment' => [
+        'comment' => FILTER_DEFAULT,
+    ],
 ];
 
 /**
@@ -98,17 +104,21 @@ $rules = [
     'post-link' => function($value) {
         return validate_url($value);
     },
-    'hashtags' => function() {
-        return validate_hashtags();
+    'hashtags' => function($value) {
+        return validate_hashtags($value);
     },
     'email' => function($email) {
         return validate_email($email);
     },
     'login' => function($value) {
-        return validate_length($value, 5, 50);
+        return validate_length($value, 4, 50);
     },
     'password' => function($value) {
         return validate_length($value, 5, 50);
+    },
+    'comment' => function($value) {
+        $value = trim($value);
+        return validate_length($value, 4, 3000);
     },
 ];
 
@@ -173,13 +183,14 @@ function validate_length($value, $min, $max)
 // - привязка тегов к публикации:
 //   - информацию из поля "Теги" надо разделить на отдельные теги-слова;
 //   - эти теги сохраняются в отдельной таблице и ссылаются на запись из таблиы постов.
-// TODO Доделать функцию валидации хэштегов
 /**
  * Валидация поля "Теги"
  */
-function validate_hashtags()
+function validate_hashtags($value)
 {
-
+    if (!empty($value)) {
+        validate_length($value, 4, 300);
+    }
     return null;
 }
 

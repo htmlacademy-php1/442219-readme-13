@@ -4,6 +4,7 @@ require_once('constants.php');
 require_once('config.php');
 require_once('connect.php');
 require_once('models.php');
+require_once('validations.php');
 
 is_not_session();
 
@@ -24,10 +25,15 @@ $subscribers = get_subscribers_by_user($link, $post['id_user']);
 
 $posting = get_posting_by_user($link, $post['id_user']);
 
+$comments = get_comments_post($link, $post['post_id']);
+
+$is_show_comments = true;
 $post_content = include_template('post-preview.php', [
     'post' => $post,
     'subscribers' => $subscribers,
     'posting' => $posting,
+    'comments' => $comments,
+    'is_show_comments' => $is_show_comments,
 ]);
 
 show_layout($layout_header, $post_content, 'readme: просмотр поста');
